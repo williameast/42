@@ -1,0 +1,196 @@
+#+title: push_swap notes
+
+* task:
+you have two stacks, named ~a~ and ~b~. ~a~ is: unsorted, contains a random
+number of positive and negative ints, and contains no duplicates. ~b~ is empty.
+
+* stacks
+as either an array or a linked list, a stack is a structure of
+
+* legal moves
+Sort into ascending order all numbers into stack ~a~. following operations are
+at your disposal:
+
+** sa (swap a)
+swap first two elements at the top of stack a
+#+begin_quote
+STACK A
+1 \ > 2
+2 / > 1
+3     3
+4     4
+#+end_quote
+
+if a is empty, do nothing.
+** sb (swap b)
+swap first two elements at the top of stack b
+#+begin_quote
+STACK B
+1 \ > 2
+2 / > 1
+3     3
+4     4
+#+end_quote
+
+if a is empty, do nothing.
+
+** ss (swap a & b)
+do sa and sb
+
+** pa (push a)
+take first element at th top of b and put it at the top of a
+** pb (push b)
+take first element at th top of a and put it at the top of b
+** ra (rotate a)
+shift all elements of a by 1 (first becomes last.)
+#+begin_quote
+STACK A
+1 /   2
+2 /   3
+3 /   4
+4 /   1
+#+end_quote
+
+** rb (rotate b)
+shift all elements of b up by 1 (first becomes last.)
+#+begin_quote
+STACK B
+1 /   2
+2 /   3
+3 /   4
+4 /   1
+#+end_quote
+** rr (rotate both)
+rotate a and b at the same time.
+
+** rra (reverse rotate a)
+shift all elements of a down 1 (last becomes first.)
+#+begin_quote
+STACK A
+1 \   4
+2 \   1
+3 \   2
+4 \   3
+#+end_quote
+
+** rrb (reverse rotate b)
+shift all elements of b down 1 (last becomes first.)
+#+begin_quote
+STACK B
+1 \   4
+2 \   1
+3 \   2
+4 \   3
+#+end_quote
+
+** rrr (rra & rrb)
+* Housekeeping
+** DONE input sanitisation:
+CLOSED: [2024-09-25 Wed 16:42]
+*** DONE check only ints are used
+CLOSED: [2024-09-23 Mon 16:11]
+*** DONE check against duplicates
+CLOSED: [2024-09-23 Mon 17:41]
+*** DONE check ints are under limit
+CLOSED: [2024-09-23 Mon 16:44]
+*** DONE handle case when input is a single argument in quotes.
+** DONE implement the  moves
+CLOSED: [2024-09-25 Wed 15:37]
+*** DONE rr
+CLOSED: [2024-09-25 Wed 15:37]
+*** DONE ss
+CLOSED: [2024-09-25 Wed 15:37]
+*** DONE pp
+CLOSED: [2024-09-25 Wed 15:37]
+*** DONE rrr
+CLOSED: [2024-09-25 Wed 15:37]
+*** DONE swap
+CLOSED: [2024-09-23 Mon 18:21]
+*** DONE push
+CLOSED: [2024-09-27 Fri 11:31]
+*** DONE rotate
+CLOSED: [2024-09-27 Fri 11:31]
+*** DONE reverse_rotate
+CLOSED: [2024-09-27 Fri 11:31]
+* TODO handle case of 3 ints
+** TODO handle minimum input edge cases (less than 3 numbers etc)
+there are 6 possible outcomes for 3 numbers.
+
+#+begin_quote
+top bottom
+1 2 3  (correct outcome)
+
+1 3 2 (rotate 1 time, swap 1 time)
+
+2 1 3 (swap 1 time)
+
+2 3 1 (reverse rotate 1 time)
+
+3 1 2 (rotate 1 time)
+
+3 2 1 (swap 1 time, reverse rotate 1 time)
+#+end_quote
+
+we have 1 do nothing state, 3 do one thing states, and 2 do 2 thing states.
+#+begin_quote
+      sa       rra
+3 2 1 -> 2 3 1 -> 1 2 3
+
+      ra       sa
+1 3 2 -> 2 1 3 -> 1 2 3
+
+               ra
+         3 1 2 -> 1 2 3
+
+               -> 1 2 3
+#+end_quote
+
+
+#+begin_quote
+      sa       rra
+
+3 2 1 -> 2 3 1 -> 1 2 3
+
+      ra       sa
+1 3 2 -> 2 1 3 -> 1 2 3
+
+               ra
+         3 1 2 -> 1 2 3
+
+               -> 1 2 3
+#+end_quote
+** TODO implement operations assuming input is 3 minimum!
+* TODO create a list of the moves predicted
+* how to calculate cost
+odd is easy, find the middle number as the half way point where rev rotate is
+more efficent than rotate.
+#+begin_quote
+number   cost
+1         1
+2         2
+3         3
+4         2
+5         1
+#+end_quote
+
+for even numbers:
+#+begin_quote
+number   cost
+1         1
+2         2
+3         3
+4         3
+5         2
+6         1
+#+end_quote
+* rotator algo
+** cost calculator:
+
+i need a tool that tells me the move order to get a piece out of stack A.
+then I need a tool that tells me the move order to get into stack B
+
+if i overlap those two move orders, I can work out the shortest optimal route
+order at one level.
+
+
+cost of moving out: o
