@@ -1,7 +1,7 @@
 NAME = push_swap
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-LIBFT_DIR = libft
+LIBFT_DIR = lib/libft
 LIBFT = ./libft/libft.a
 RM = rm -rf
 SRCS = lists.c utils.c sort.c sanitize.c printing.c
