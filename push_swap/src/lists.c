@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:03:53 by William           #+#    #+#             */
-/*   Updated: 2024/11/20 11:26:32 by William          ###   ########.fr       */
+/*   Updated: 2024/11/20 17:59:01 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void	print_move(char *move, char stack)
 	/* ft_putchar_fd(stack, 0); */
 	/* ft_putchar_fd('\n', 0); */
 	/* fflush(stdout); */
-	printf("%s%c\n", move, stack);
+	if (stack == 0)
+		printf("%s\n", move);
+	else
+		printf("%s%c\n", move, stack);
 }
 
 void push(t_stack *stack, int value)
@@ -40,11 +43,12 @@ void push(t_stack *stack, int value)
     }
 }
 
-void	push_to_stack(t_stack *src, t_stack *dest)
+void	push_to_stack(t_stack *src, t_stack *dest, int print)
 {
 	t_node *obj;
 
-	print_move("p", dest->name);
+	if (print)
+		print_move("p", dest->name);
 	if (src->top == NULL)
 		return;
 	obj = src->top;
@@ -53,12 +57,13 @@ void	push_to_stack(t_stack *src, t_stack *dest)
 	dest->top = obj;
 }
 
-void	rotate(t_stack *stack)
+void	rotate(t_stack *stack, int print)
 {
 	t_node *first;
 	t_node *current;
 
-	print_move("r", stack->name);
+	if (print)
+		print_move("r", stack->name);
 	if (stack->top == NULL || stack->top->next == NULL)
 		return;
 	first = stack->top;
@@ -70,12 +75,13 @@ void	rotate(t_stack *stack)
 	first->next = NULL;
 }
 
-void	reverse_rotate(t_stack *stack)
+void	reverse_rotate(t_stack *stack, int print)
 {
 	t_node *prev;
 	t_node *current;
 
-	print_move("rr", stack->name);
+	if (print)
+		print_move("rr", stack->name);
 	if (stack->top == NULL || stack->top->next == NULL)
 		return;
 	prev = NULL;
@@ -90,11 +96,46 @@ void	reverse_rotate(t_stack *stack)
 	stack->top = current;
 }
 
-/* void print_stack(t_stack *stack) { */
-/*     t_node *current = stack->top; */
-/*     while (current) { */
-/*         printf("%d ", current->n); */
-/*         current = current->next; */
-/*     } */
-/*     printf("\n"); */
-/* } */
+void	swap(t_stack *stack, int print)
+{
+	t_node *first;
+	t_node *second;
+
+	if (print)
+		print_move("s", stack->name);
+	if (stack->top == NULL || stack->top->next == NULL)
+		return;
+	first = stack->top;
+	second = stack->top->next;
+	first->next = second->next;
+	second->next = first;
+	stack->top = second;
+}
+
+void	rotate_both(t_stack *a, t_stack *b)
+{
+	print_move("rr", 0);
+	rotate(a, 0);
+	rotate(b, 0);
+}
+void	reverse_rotate_both(t_stack *a, t_stack *b)
+{
+	print_move("rrr", 0);
+	reverse_rotate(a, 0);
+	reverse_rotate(b, 0);
+}
+void	push_both(t_stack *a, t_stack *b)
+{
+	t_node	*top_a;
+	t_node	*top_b;
+	int		temp;
+
+	print_move("pp", 0);
+	if (a->top == NULL || b->top == NULL)
+		return;
+	top_a = a->top;
+	top_b = b->top;
+	temp = top_a->n;
+	top_a->n = top_b->n;
+	top_b->n = temp;
+}

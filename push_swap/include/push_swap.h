@@ -65,15 +65,22 @@ int	find_cheapest_target(t_stack *a);
 void	rotate_n_times(t_stack *stack, int cost);
 int	find_max(t_stack *stack);
 void	move_max_to_top(t_stack *stack);
-void	funnysort(t_stack *a, t_stack *b);
+void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b);
+void	sort_triplets(t_stack *stack);
+void	xdsort(t_stack *src, t_stack *dest, int cutoff);
+void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b);
+void	willysort(t_stack *a, t_stack *b);
 
 /* Declarations from lists.c */
 void	print_move(char *move, char stack);
 void push(t_stack *stack, int value);
-void	push_to_stack(t_stack *src, t_stack *dest);
-void	rotate(t_stack *stack);
-void	reverse_rotate(t_stack *stack);
-void print_stack(t_stack *stack);
+void	push_to_stack(t_stack *src, t_stack *dest, int print);
+void	rotate(t_stack *stack, int print);
+void	reverse_rotate(t_stack *stack, int print);
+void	swap(t_stack *stack, int print);
+void	rotate_both(t_stack *a, t_stack *b);
+void	reverse_rotate_both(t_stack *a, t_stack *b);
+void	push_both(t_stack *a, t_stack *b);
 
 /* Declarations from sort.c */
 int	main(int argc, char *argv[]);
