@@ -57,19 +57,26 @@ int	get_max_bits(t_stack *stack);
 void	index_stack(t_stack *stack);
 int	find_closest_smaller_nr(t_stack *stack, int nr);
 int find_closest_position(t_stack *stack, int nr);
+int find_closest_position_ascending2(t_stack *stack, int nr);
+int find_closest_position_ascending(t_stack *stack, int nr);
 void	get_targets(t_stack *a, t_stack *b);
+void	get_targets_ascending(t_stack *a, t_stack *b);
 void	get_cost(t_stack *stack);
 int	ft_abs(int nr);
 int	find_cheapest_candidate(t_stack *a);
 int	find_cheapest_target(t_stack *a);
 void	rotate_n_times(t_stack *stack, int cost);
-int	find_max(t_stack *stack);
-void	move_max_to_top(t_stack *stack);
+int	find_min(t_stack *stack);
+void	move_min_to_top(t_stack *stack);
 void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b);
-void	sort_triplets(t_stack *stack);
+void sort_triplets(t_stack *stack);
 void	xdsort(t_stack *src, t_stack *dest, int cutoff);
+void	slot_b_into_a(t_stack *a, t_stack *b);
 void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b);
 void	willysort(t_stack *a, t_stack *b);
+int	get_alignment_cost(int cost, int stack_size);
+int	get_absolute_cost(int cost_src, int cost_dest);
+void	adv_cost_calculator(t_stack *src, t_stack *dest);
 
 /* Declarations from lists.c */
 void	print_move(char *move, char stack);
@@ -83,6 +90,7 @@ void	reverse_rotate_both(t_stack *a, t_stack *b);
 void	push_both(t_stack *a, t_stack *b);
 
 /* Declarations from sort.c */
+void	check_output(t_stack *stack);
 int	main(int argc, char *argv[]);
 
 /* Declarations from printing.c */
