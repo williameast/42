@@ -35,9 +35,9 @@ for (( i=1; i<=RUNS; i++ )); do
   MOVE_COUNT=$(echo "$OUTPUT" | wc -l)
   TOTAL_MOVES=$((TOTAL_MOVES + MOVE_COUNT))
 
-  echo "Run $i:"
-  echo "Input: $INPUT"
-  echo "Number of moves: $MOVE_COUNT"
+  # echo "Run $i:"
+  # echo "Input: $INPUT"
+  # echo "Number of moves: $MOVE_COUNT"
 
   if (( PRINT_MOVES == 1 )); then
     echo "Move sequence:"

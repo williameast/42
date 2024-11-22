@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:38:24 by weast             #+#    #+#             */
-/*   Updated: 2024/11/14 14:20:51 by William          ###   ########.fr       */
+/*   Updated: 2024/11/22 20:52:13 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/push_swap.h"
@@ -22,6 +22,21 @@ t_stack	*init_stack(char c)
     stack->top = NULL;
     stack->name = c;
     return (stack);
+}
+
+void	index_stack(t_stack *stack)
+{
+	t_node *current;
+	int	index;
+
+	index = 0;
+	current = stack->top;
+	while (current != NULL)
+	{
+		current->index = index;
+		index++;
+		current = current->next;
+	}
 }
 
 int	check_for_dup_in_stack(t_stack *stack)

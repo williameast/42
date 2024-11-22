@@ -45,60 +45,68 @@ typedef struct s_moves
 }	t_moves;
 
 /* declarations */
-/* Declarations from sanitize.c */
-t_stack	*init_stack(char c);
-int	check_for_dup_in_stack(t_stack *stack);
-t_stack	*get_int_from_str(char *str);
-t_stack	*get_int_from_argv(int argc, char **argv);
-
-/* Declarations from utils.c */
-int	stack_size(t_stack *stack);
-int	get_max_bits(t_stack *stack);
-void	index_stack(t_stack *stack);
-int	find_closest_smaller_nr(t_stack *stack, int nr);
-int find_closest_position(t_stack *stack, int nr);
-int find_closest_position_ascending2(t_stack *stack, int nr);
-int find_closest_position_ascending(t_stack *stack, int nr);
-void	get_targets(t_stack *a, t_stack *b);
-void	get_targets_ascending(t_stack *a, t_stack *b);
-void	get_cost(t_stack *stack);
-int	ft_abs(int nr);
-int	find_cheapest_candidate(t_stack *a);
-int	find_cheapest_target(t_stack *a);
-void	rotate_n_times(t_stack *stack, int cost);
-int	find_min(t_stack *stack);
-void	move_min_to_top(t_stack *stack);
-void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b);
-void sort_triplets(t_stack *stack);
-void	xdsort(t_stack *src, t_stack *dest, int cutoff);
-void	slot_b_into_a(t_stack *a, t_stack *b);
-void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b);
-void	willysort(t_stack *a, t_stack *b);
-int	get_alignment_cost(int cost, int stack_size);
-int	get_absolute_cost(int cost_src, int cost_dest);
-void	adv_cost_calculator(t_stack *src, t_stack *dest);
-
-/* Declarations from lists.c */
-void	print_move(char *move, char stack);
-void push(t_stack *stack, int value);
+/* Declarations from moves.c */
 void	push_to_stack(t_stack *src, t_stack *dest, int print);
 void	rotate(t_stack *stack, int print);
 void	reverse_rotate(t_stack *stack, int print);
 void	swap(t_stack *stack, int print);
+
+/* Declarations from sanitize.c */
+t_stack	*init_stack(char c);
+void	index_stack(t_stack *stack);
+int	check_for_dup_in_stack(t_stack *stack);
+t_stack	*get_int_from_str(char *str);
+t_stack	*get_int_from_argv(int argc, char **argv);
+
+/* Declarations from moves_extended.c */
+void push(t_stack *stack, int value);
 void	rotate_both(t_stack *a, t_stack *b);
 void	reverse_rotate_both(t_stack *a, t_stack *b);
-void	push_both(t_stack *a, t_stack *b);
+
+/* Declarations from position_calculator.c */
+int find_closest_smaller(t_stack *stack, int nr, int *closest_smaller_value);
+int find_closest_larger(t_stack *stack, int nr, int *closest_larger_value);
+int find_closest_smaller2(t_stack *stack, int nr, int *closest_smaller_value);
+int find_closest_larger2(t_stack *stack, int nr, int *closest_larger_value);
+int find_closest_position(t_stack *stack, int nr);
+int find_closest_position_ascending2(t_stack *stack, int nr);
+int find_closest_position_ascending2(t_stack *stack, int nr);
+void	get_targets(t_stack *a, t_stack *b);
+void	get_targets_ascending(t_stack *a, t_stack *b);
 
 /* Declarations from sort.c */
-void	check_output(t_stack *stack);
+void	slot_b_into_a(t_stack *a, t_stack *b);
+void sort_triplets(t_stack *stack);
+void	xdsort(t_stack *src, t_stack *dest, int cutoff);
+void	willysort(t_stack *a, t_stack *b);
 int	main(int argc, char *argv[]);
 
+/* Declarations from utilities.c */
+void	rotate_n_times(t_stack *stack, int cost);
+void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b);
+void	move_min_to_top(t_stack *stack);
+void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b);
+
 /* Declarations from printing.c */
-void	print_stack_v(t_node **head);
+void	print_move(char *move, char stack);
+void	check_output(t_stack *stack);
 void	print_both(t_stack *a, t_stack *b);
-void	print_movseq(t_moves *seq);
-char	*debug_decode_movseq(int move);
-void	print_array(int *arr, int size);
+
+/* Declarations from costs.c */
+void	get_cost(t_stack *stack);
+int find_cheapest_candidate(t_stack *a);
+int find_cheapest_target(t_stack *a);
+
+/* Declarations from maths.c */
+int	find_min(t_stack *stack);
+int	ft_abs(int nr);
+int	stack_size(t_stack *stack);
+
+/* Declarations from reinsert.c */
+int find_closest_larger_index(t_stack *stack, int nr, int *closest_larger_value);
+int find_smallest_index(t_stack *stack, int *smallest_value);
+int calculate_shortest_distance(int target_index, int stack_size);
+int find_closest_position_ascending(t_stack *stack, int nr);
 
 /* declarations end */
 

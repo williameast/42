@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 LIBFT_DIR = lib/libft
 LIBFT = ./libft/libft.a
 RM = rm -rf
-SRCS = lists.c utils.c sort.c sanitize.c printing.c
+SRCS = costs.c maths.c moves.c moves_extended.c position_calculator.c printing.c sanitize.c sort.c utilities.c reinsert.c
 SRC	= $(addprefix ./src/,$(SRCS))
 OBJ = $(SRC:.c=.o)
 
@@ -49,7 +49,7 @@ endif
 test:
 	@$(eval ARG = $(shell seq -1000 1000 | shuf -n $(size)))
 	@echo "Checker result: "
-	# $(CHECKER)
+	# @ $(CHECKER)
 	@echo "Instructions count: "
 	@./push_swap $(ARG) | wc -l
 

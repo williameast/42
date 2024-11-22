@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/13 09:59:19 by William          ###   ########.fr       */
+/*   Updated: 2024/11/22 22:28:46 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,41 @@
 /* ************************************************************************** */
 #include "../include/push_swap.h"
 
-/* void	print_stack(t_node **head) */
-/* { */
-/*     t_node	*temp; */
-
-/*     temp = *head; */
-/*     while (temp != NULL) */
-/*     { */
-/*         ft_putnbr_fd(temp->n, 0); */
-/*         ft_putchar_fd(' ', 0); */
-/*         temp = temp->next; */
-/*     } */
-/*     ft_putchar_fd('\n', 0); */
-/* } */
-
-void	print_stack_v(t_node **head)
+// replace with your printf!
+void	print_move(char *move, char stack)
 {
-    t_node	*temp;
+	if (stack == 0)
+		printf("%s\n", move);
+	else
+		printf("%s%c\n", move, stack);
+	/* if (stack == 0) */
+	/* 	ft_putstr_fd(move, 0); */
+	/* else */
+    /* { */
+    /*     ft_putstr_fd(move, 0); */
+	/* 	ft_putchar_fd(stack, 0); */
+    /* } */
+    /* ft_putchar_fd('\n', 0); */
 
-    temp = *head;
-    while (temp != NULL)
-    {
-        printf("ID:%i VAL: %i\n", temp->index, temp->n);
-        temp = temp->next;
-    }
-    ft_putchar_fd('\n', 0);
 }
 
+void	check_output(t_stack *stack)
+{
+	t_node	*temp;
+
+	temp = stack->top;
+	while (temp->next != NULL)
+	{
+		if (temp->n > temp->next->n)
+		{
+			printf("<<<<<<<<<<<<<<<<<<<FAIL>>>>>>>>>>>>>>>>>\n");
+			return;
+		}
+		temp = temp->next;
+	}
+	printf("<<<<<<<<<<<<<<<<<<<SUCCESS>>>>>>>>>>>>>>>>>\n");
+	return;
+}
 void	print_both(t_stack *a, t_stack *b)
 {
     t_node *temp_a = a->top;
@@ -71,46 +79,4 @@ void	print_both(t_stack *a, t_stack *b)
             temp_b = temp_b->next;
         }
     }
-}
-
-/* ************************************************************************** */
-/*                                                                            */
-/*sa 0 |sb 1 |ss 2 |pa 3 |pb 4 |pp 5 |ra 6 |rb 7 |rr 8 |rra 9 |rrb 10 |rrr 11 */
-/*                                                                            */
-/* ************************************************************************** */
-
-void	print_movseq(t_moves *seq)
-{
-    int	i;
-    i = 0;
-    char *movenames[] = {"sa", "sb", "ss", "pa", "pb", "pp", "ra", "rb", "rr", "rra", "rrb", "rrr"};
-
-    if (!seq)
-        return;
-    /* printf("%s\n", "MOVSEQ"); */
-    while (i < seq->size)
-    {
-        ft_putstr_fd(movenames[seq->moves[i]], 0);
-        ft_putstr_fd("\n", 0);
-        i++;
-    }
-    /* printf("MOVSEQ completed in %i moves.\n", i); */
-}
-
-char	*debug_decode_movseq(int move)
-{
-    char *movenames[] = {"sa", "sb", "ss", "pa", "pb", "pp", "ra", "rb", "rr", "rra", "rrb", "rrr"};
-    return (movenames[move]);
-}
-
-void	print_array(int *arr, int size)
-{
-    int 	i;
-    i = 0;
-    while (i < size)
-    {
-        printf("%i ", arr[i]);
-        i++;
-    }
-    printf("\n");
 }
