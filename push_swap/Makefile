@@ -49,7 +49,7 @@ endif
 test:
 	@$(eval ARG = $(shell seq -1000 1000 | shuf -n $(size)))
 	@echo "Checker result: "
-	# @ $(CHECKER)
+	@ $(CHECKER)
 	@echo "Instructions count: "
 	@./push_swap $(ARG) | wc -l
 
