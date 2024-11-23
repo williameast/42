@@ -6,13 +6,13 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 14:12:50 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 14:49:24 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/push_swap.h"
 
-int	find_closest_larger_index(t_stack *stack, int nr, int *closest_larger_value)
+int	find_closest_larger_index(t_stack *stack, int nr, int *closest_lg_v)
 {
 	t_node	*temp;
 	int		closest_larger_index;
@@ -23,9 +23,9 @@ int	find_closest_larger_index(t_stack *stack, int nr, int *closest_larger_value)
 	current_index = 0;
 	while (temp != NULL)
 	{
-		if (temp->n > nr && temp->n < *closest_larger_value)
+		if (temp->n > nr && temp->n < *closest_lg_v)
 		{
-			*closest_larger_value = temp->n;
+			*closest_lg_v = temp->n;
 			closest_larger_index = current_index;
 		}
 		current_index++;
@@ -85,4 +85,26 @@ int	find_closest_position_ascending(t_stack *stack, int nr)
 		return (calculate_shortest_distance(closest_lg_index, size));
 	else
 		return (calculate_shortest_distance(smallest_index, size));
+}
+
+void	slot_b_into_a(t_stack *a, t_stack *b)
+{
+	int	target_nr;
+
+	while (b->top != NULL)
+	{
+		target_nr = b->top->target;
+		while (target_nr > 0)
+		{
+			rotate(a, 1);
+			target_nr--;
+		}
+		while (target_nr < 0)
+		{
+			reverse_rotate(a, 1);
+			target_nr++;
+		}
+		push_to_stack(b, a, 1);
+		get_targets_ascending(b, a);
+	}
 }

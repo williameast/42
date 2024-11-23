@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 14:19:02 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 14:36:56 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,6 @@ void	sort_triplets(t_stack *stack)
 		swap(stack, 1);
 }
 
-void	slot_b_into_a(t_stack *a, t_stack *b)
-{
-	int	target_nr;
-
-	while (b->top != NULL)
-	{
-		target_nr = b->top->target;
-		while (target_nr > 0)
-		{
-			rotate(a, 1);
-			target_nr--;
-		}
-		while (target_nr < 0)
-		{
-			reverse_rotate(a, 1);
-			target_nr++;
-		}
-		push_to_stack(b, a, 1);
-		get_targets_ascending(b, a);
-	}
-}
-
 void	xdsort(t_stack *src, t_stack *dest, int cutoff)
 {
 	int	size;
@@ -82,9 +60,22 @@ void	xdsort(t_stack *src, t_stack *dest, int cutoff)
 	}
 }
 
+void	sort_less_than_three(t_stack *stack)
+{
+	int	size;
+
+	size = stack_size(stack);
+	if (size <= 1 || stack->top->n < stack->top->next->n)
+		return ;
+	else
+		swap(stack, 1);
+}
+
 void	willysort(t_stack *a, t_stack *b)
 {
-	if (stack_size(a) == 3)
+	if (stack_size(a) < 3)
+		sort_less_than_three(a);
+	else if (stack_size(a) == 3)
 		sort_triplets(a);
 	else
 	{

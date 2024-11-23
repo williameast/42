@@ -6,13 +6,13 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:54:20 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 13:58:12 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 14:48:26 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/push_swap.h"
 
-int	find_closest_smaller(t_stack *stack, int nr, int *closest_smaller_value)
+int	find_closest_smaller(t_stack *stack, int nr, int *closest_sm_v)
 {
 	t_node	*temp;
 	int		closest_smaller_index;
@@ -21,9 +21,9 @@ int	find_closest_smaller(t_stack *stack, int nr, int *closest_smaller_value)
 	closest_smaller_index = -1;
 	while (temp != NULL)
 	{
-		if (temp->n < nr && temp->n > *closest_smaller_value)
+		if (temp->n < nr && temp->n > *closest_sm_v)
 		{
-			*closest_smaller_value = temp->n;
+			*closest_sm_v = temp->n;
 			closest_smaller_index = temp->index;
 		}
 		temp = temp->next;
@@ -31,7 +31,7 @@ int	find_closest_smaller(t_stack *stack, int nr, int *closest_smaller_value)
 	return (closest_smaller_index);
 }
 
-int	find_closest_larger(t_stack *stack, int nr, int *closest_larger_value)
+int	find_closest_larger(t_stack *stack, int nr, int *closest_lg_v)
 {
 	t_node	*temp;
 	int		closest_larger_index;
@@ -40,9 +40,9 @@ int	find_closest_larger(t_stack *stack, int nr, int *closest_larger_value)
 	closest_larger_index = -1;
 	while (temp != NULL)
 	{
-		if (temp->n > nr && temp->n < *closest_larger_value)
+		if (temp->n > nr && temp->n < *closest_lg_v)
 		{
-			*closest_larger_value = temp->n;
+			*closest_lg_v = temp->n;
 			closest_larger_index = temp->index;
 		}
 		temp = temp->next;
