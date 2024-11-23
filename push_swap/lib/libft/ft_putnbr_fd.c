@@ -1,25 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   putnbr_fd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/06/28 16:14:49 by weast             #+#    #+#             */
+/*   Updated: 2024/06/30 17:48:01 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libft.h"
 
-#include "../include/push_swap.h"
-
-void	print_move(char *move, char stack)
+void	ft_putnbr_fd(int n, int fd)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
+	long	b;
+
+	b = n;
+	if (b < 0)
 	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
+		ft_putchar_fd('-', fd);
+		b = b * -1;
 	}
-	ft_putchar_fd('\n', 1);
+	if (b > 9)
+	{
+		ft_putnbr_fd(b / 10, fd);
+		ft_putnbr_fd(b % 10, fd);
+	}
+	else
+		ft_putchar_fd(b + '0', fd);
 }
+/* int main(void) { */
+/*     ft_putnbr_fd(123, 1); */
+/*     return 0; */
+/* } */

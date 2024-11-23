@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   strncmp.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/19 17:19:00 by weast             #+#    #+#             */
+/*   Updated: 2024/06/30 16:46:43 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include <stdlib.h>
 
-void	print_move(char *move, char stack)
+int	ft_strncmp(const char *str1, const char *str2, size_t n)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
+	size_t	i;
+
+	if (n == 0)
+		return (0);
+	i = 0;
+	while (str1[i] == str2[i] && str1[i] != '\0')
 	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
+		if (i < (n - 1))
+			i++;
+		else
+			return (0);
 	}
-	ft_putchar_fd('\n', 1);
+	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
 }

@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/19 12:04:55 by weast             #+#    #+#             */
+/*   Updated: 2024/04/19 13:40:01 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include <stdlib.h>
 
-void	print_move(char *move, char stack)
+size_t	ft_strlcpy(char *dest, const char *source, size_t destsize)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
+	size_t	i;
+
+	i = 0;
+	if (destsize > 0)
 	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
+		while (source[i] != '\0' && i < (destsize - 1))
+		{
+			dest[i] = source[i];
+			i++;
+		}
+		dest[i] = '\0';
 	}
-	ft_putchar_fd('\n', 1);
+	while (source[i] != '\0')
+		i++;
+	return (i);
 }

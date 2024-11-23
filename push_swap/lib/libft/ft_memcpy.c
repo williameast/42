@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/19 17:53:58 by weast             #+#    #+#             */
+/*   Updated: 2024/04/23 15:07:01 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include <stdlib.h>
 
-void	print_move(char *move, char stack)
+void	*ft_memcpy(void *dest, const void *source, size_t n)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
+	size_t	i;
+
+	if (!dest && !source)
+		return (0);
+	i = 0;
+	while (i < n)
 	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
+		((unsigned char *)dest)[i] = ((unsigned char *) source)[i];
+		i++;
 	}
-	ft_putchar_fd('\n', 1);
+	return (dest);
 }

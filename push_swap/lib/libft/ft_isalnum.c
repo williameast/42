@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/16 16:47:53 by weast             #+#    #+#             */
+/*   Updated: 2024/06/30 17:34:03 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include "libft.h"
 
-void	print_move(char *move, char stack)
+int	ft_isalnum(char c)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
-	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
-	}
-	ft_putchar_fd('\n', 1);
+	return (ft_isdigit(c) || ft_isalpha(c));
 }

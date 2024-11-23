@@ -6,21 +6,20 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/22 20:35:23 by William          ###   ########.fr       */
+/*   Updated: 2024/11/23 13:47:15 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/push_swap.h"
 
-
 void	push_to_stack(t_stack *src, t_stack *dest, int print)
 {
-	t_node *obj;
+	t_node	*obj;
 
 	if (print)
 		print_move("p", dest->name);
 	if (src->top == NULL)
-		return;
+		return ;
 	obj = src->top;
 	src->top = src->top->next;
 	obj->next = dest->top;
@@ -29,17 +28,17 @@ void	push_to_stack(t_stack *src, t_stack *dest, int print)
 
 void	rotate(t_stack *stack, int print)
 {
-	t_node *first;
-	t_node *current;
+	t_node	*first;
+	t_node	*current;
 
 	if (print)
 		print_move("r", stack->name);
 	if (stack->top == NULL || stack->top->next == NULL)
-		return;
+		return ;
 	first = stack->top;
 	stack->top = first->next;
 	current = stack->top;
-	while(current->next != NULL)
+	while (current->next != NULL)
 		current = current->next;
 	current->next = first;
 	first->next = NULL;
@@ -47,13 +46,13 @@ void	rotate(t_stack *stack, int print)
 
 void	reverse_rotate(t_stack *stack, int print)
 {
-	t_node *prev;
-	t_node *current;
+	t_node	*prev;
+	t_node	*current;
 
 	if (print)
 		print_move("rr", stack->name);
 	if (stack->top == NULL || stack->top->next == NULL)
-		return;
+		return ;
 	prev = NULL;
 	current = stack->top;
 	while (current->next != NULL)
@@ -68,13 +67,13 @@ void	reverse_rotate(t_stack *stack, int print)
 
 void	swap(t_stack *stack, int print)
 {
-	t_node *first;
-	t_node *second;
+	t_node	*first;
+	t_node	*second;
 
 	if (print)
 		print_move("s", stack->name);
 	if (stack->top == NULL || stack->top->next == NULL)
-		return;
+		return ;
 	first = stack->top;
 	second = stack->top->next;
 	first->next = second->next;

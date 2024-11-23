@@ -1,25 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/16 16:41:23 by weast             #+#    #+#             */
+/*   Updated: 2024/04/16 17:30:51 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../include/push_swap.h"
-
-void	print_move(char *move, char stack)
+int	ft_isascii(int c)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
-	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
-	}
-	ft_putchar_fd('\n', 1);
+	return (0 <= c && c < 128);
 }

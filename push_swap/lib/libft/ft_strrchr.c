@@ -1,25 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:00:40 by weast            ###   ########.fr       */
+/*   Created: 2024/04/18 13:34:59 by weast             #+#    #+#             */
+/*   Updated: 2024/07/01 12:33:01 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/push_swap.h"
+#include <stdlib.h>
+#include "libft.h"
 
-void	print_move(char *move, char stack)
+char	*ft_strrchr(const char *str, int c)
 {
-	if (stack == 0)
-		ft_putstr_fd(move, 1);
-	else
+	char	*temp;
+
+	temp = NULL;
+	while (*str)
 	{
-		ft_putstr_fd(move, 1);
-		ft_putchar_fd(stack, 1);
+		if (*str == (char)c)
+			temp = (char *)str;
+		str++;
 	}
-	ft_putchar_fd('\n', 1);
+	if (*str == (char)c)
+		return ((char *)str);
+	return (temp);
 }

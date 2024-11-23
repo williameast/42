@@ -6,36 +6,36 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/22 22:45:05 by William          ###   ########.fr       */
+/*   Updated: 2024/11/23 14:19:02 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/push_swap.h"
 
-void sort_triplets(t_stack *stack)
+void	sort_triplets(t_stack *stack)
 {
-    int top;
-	int mid;
-	int bot;
+	int	top;
+	int	mid;
+	int	bot;
 
-    top = stack->top->n;
-    mid = stack->top->next->n;
-    bot = stack->top->next->next->n;
-    if (top < mid && mid < bot)
-        return;
-    if (top > mid && top > bot)
-    {
+	top = stack->top->n;
+	mid = stack->top->next->n;
+	bot = stack->top->next->next->n;
+	if (top < mid && mid < bot)
+		return ;
+	if (top > mid && top > bot)
+	{
 		rotate(stack, 1);
 		if (stack->top->n > stack->top->next->n)
 			swap(stack, 1);
-    }
-    else if (mid > top && mid > bot)
-    {
+	}
+	else if (mid > top && mid > bot)
+	{
 		reverse_rotate(stack, 1);
 		if (stack->top->n > stack->top->next->n)
 			swap(stack, 1);
-    }
-    else if (bot > top && bot > mid)
+	}
+	else if (bot > top && bot > mid)
 		swap(stack, 1);
 }
 
@@ -46,7 +46,6 @@ void	slot_b_into_a(t_stack *a, t_stack *b)
 	while (b->top != NULL)
 	{
 		target_nr = b->top->target;
-
 		while (target_nr > 0)
 		{
 			rotate(a, 1);
@@ -65,8 +64,8 @@ void	slot_b_into_a(t_stack *a, t_stack *b)
 void	xdsort(t_stack *src, t_stack *dest, int cutoff)
 {
 	int	size;
-	int cost_a;
-	int cost_b;
+	int	cost_a;
+	int	cost_b;
 
 	size = stack_size(src);
 	while (size > cutoff)
@@ -103,23 +102,19 @@ void	willysort(t_stack *a, t_stack *b)
 
 int	main(int argc, char *argv[])
 {
-    t_stack	*a;
-    t_stack	*b;
+	t_stack	*a;
+	t_stack	*b;
 
-
-    if (argc == 2)
-        a = get_int_from_str(argv[1]);
-    else
-        a = get_int_from_argv(argc, argv);
-
-    if (a == NULL || check_for_dup_in_stack(a))
-    {
-        ft_putstr_fd("Error\n", 2);
-        return (0);
-    }
+	if (argc == 2)
+		a = get_int_from_str(argv[1]);
+	else
+		a = get_int_from_argv(argc, argv);
+	if (a == NULL || check_for_dup_in_stack(a))
+	{
+		ft_putstr_fd("Error\n", 2);
+		return (0);
+	}
 	b = init_stack('b');
 	willysort(a, b);
-	/* check_output(a); */
-    return 0;
+	return (0);
 }
-

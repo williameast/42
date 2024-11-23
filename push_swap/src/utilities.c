@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/22 20:52:57 by William          ###   ########.fr       */
+/*   Updated: 2024/11/23 14:22:16 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	rotate_n_times(t_stack *stack, int cost)
 {
-	while(cost < 0)
+	while (cost < 0)
 	{
 		reverse_rotate(stack, 1);
 		cost++;
 	}
-	while(cost > 0)
+	while (cost > 0)
 	{
 		rotate(stack, 1);
 		cost--;
@@ -46,9 +46,9 @@ void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b)
 
 void	move_min_to_top(t_stack *stack)
 {
-	int	min_index;
-	int	cost;
-	t_node *temp;
+	t_node	*temp;
+	int		min_index;
+	int		cost;
 
 	min_index = find_min(stack);
 	temp = stack->top;
@@ -58,7 +58,7 @@ void	move_min_to_top(t_stack *stack)
 		if (min_index == temp->index)
 		{
 			cost = temp->cost;
-			break;
+			break ;
 		}
 		temp = temp->next;
 	}

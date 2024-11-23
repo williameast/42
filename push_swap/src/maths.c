@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/22 20:56:41 by William          ###   ########.fr       */
+/*   Updated: 2024/11/23 13:45:30 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	find_min(t_stack *stack)
 {
 	t_node	*temp;
-	int	current_min;
-	int	index;
+	int		current_min;
+	int		index;
 
 	index_stack(stack);
 	temp = stack->top;
@@ -42,12 +42,11 @@ int	ft_abs(int nr)
 
 int	stack_size(t_stack *stack)
 {
-	int	size;
-	t_node *current;
+	t_node	*current;
+	int		size;
 
 	current = stack->top;
 	size = 0;
-
 	while (current != NULL)
 	{
 		size++;
