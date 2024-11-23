@@ -5,51 +5,48 @@ LIBFT_DIR = lib/libft
 LIBFT = ./libft/libft.a
 RM = rm -rf
 SRCS = costs.c maths.c moves.c moves_extended.c position_calculator.c printing.c sanitize.c sort.c utilities.c reinsert.c
-SRC	= $(addprefix ./src/,$(SRCS))
-OBJ = $(SRC:.c=.o)
+SRC = $(addprefix ./src/,$(SRCS))
+OBJ_DIR = obj
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
-
-all: $(LIBFT) $(NAME)
-	@echo "Generated all files."
+all: $(NAME)
 
 $(LIBFT):
 	@make -s -C $(LIBFT_DIR)
 
-$(NAME): $(LIBFT) $(SRC)
-	@$(CC) $(CFLAGS) $(SRC) -o $(NAME) -L./$(LIBFT_DIR) -lft
+$(NAME): $(LIBFT) $(OBJ)
+	@need_linking=false; \
+	if [ ! -f $(NAME) ]; then \
+		need_linking=true; \
+	elif [ "$(OBJ)" -nt "$(NAME)" ]; then \
+		need_linking=true; \
+	elif [ "$(LIBFT)" -nt "$(NAME)" ]; then \
+		need_linking=true; \
+	fi; \
+	if $$need_linking = true; then \
+		echo "Linking executable $(NAME)..."; \
+		$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -L./$(LIBFT_DIR) -lft; \
+		echo "Executable $(NAME) update."; \
+	else \
+		echo "Nothing to do."; \
+	fi
 
-$(OBJ): $(SRC)
-	@$(CC) $(CFLAGS) -c $? -I./$(LIBFT_DIR)
-	@mv *.o obj
+$(OBJ_DIR)/%.o: ./src/%.c | $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@$(RM) src/*.o
+	@$(RM) $(OBJ_DIR)
 	@make -s -C $(LIBFT_DIR) clean
-	@echo "cleaned build files."
+	@echo "Cleaned build files."
 
-fclean:	clean
+fclean: clean
 	@$(RM) $(NAME)
 	@make -s -C $(LIBFT_DIR) fclean
-	@echo "full clean complete."
+	@echo "Full clean complete."
 
-re:	fclean all clean
+re: fclean all
 
-.PHONY: all clean fclean test re
-
-OS = $(shell uname)
-
-size ?= 100
-
-ifeq ($(OS),Linux)
-CHECKER = ./push_swap $(ARG) | ./checker_linux $(ARG)
-else
-CHECKER = ./push_swap $(ARG) | ./checker_Mac $(ARG)
-endif
-
-test:
-	@$(eval ARG = $(shell seq -1000 1000 | shuf -n $(size)))
-	@echo "Checker result: "
-	@ $(CHECKER)
-	@echo "Instructions count: "
-	@./push_swap $(ARG) | wc -l
-
+.PHONY: all clean fclean re

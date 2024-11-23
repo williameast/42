@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:38:00 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:50:28 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 15:09:40 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PUSH_SWAP_H
@@ -93,6 +93,7 @@ void	rotate_n_times(t_stack *stack, int cost);
 void	rotate_n_times_combined(t_stack *a, t_stack *b, int cost_a, int cost_b);
 void	move_min_to_top(t_stack *stack);
 void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b);
+void	free_stack(t_stack *stack);
 
 /* declarations end */
 

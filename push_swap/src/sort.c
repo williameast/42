@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 14:36:56 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 17:05:40 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,17 @@ void	sort_less_than_three(t_stack *stack)
 
 void	willysort(t_stack *a, t_stack *b)
 {
-	if (stack_size(a) < 3)
+	int	size;
+
+	size = stack_size(a);
+	if (size < 3)
 		sort_less_than_three(a);
-	else if (stack_size(a) == 3)
+	else if (size == 3)
 		sort_triplets(a);
 	else
 	{
-		push_to_stack(a, b, 1);
+		if (size > 4)
+			push_to_stack(a, b, 1);
 		push_to_stack(a, b, 1);
 		index_and_get_costs_of_stacks(a, b);
 		xdsort(a, b, 3);
@@ -103,9 +107,12 @@ int	main(int argc, char *argv[])
 	if (a == NULL || check_for_dup_in_stack(a))
 	{
 		ft_putstr_fd("Error\n", 2);
+		free_stack(a);
 		return (0);
 	}
 	b = init_stack('b');
 	willysort(a, b);
+	free_stack(a);
+	free_stack(b);
 	return (0);
 }

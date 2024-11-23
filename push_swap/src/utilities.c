@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:22:16 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 17:08:53 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,21 @@ void	index_and_get_costs_of_stacks(t_stack *a, t_stack *b)
 	index_stack(a);
 	get_targets(a, b);
 	get_cost(a);
+}
+
+void	free_stack(t_stack *stack)
+{
+	t_node	*current;
+	t_node	*next;
+
+	if (stack == NULL)
+		return ;
+	current = stack->top;
+	while (current != NULL)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	free(stack);
 }

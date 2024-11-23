@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:38:24 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 14:16:46 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/23 17:04:22 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/push_swap.h"
@@ -75,6 +75,7 @@ t_stack	*get_int_from_str(char *str)
 		{
 			free(res[i]);
 			free(res);
+			free_stack(stack_a);
 			return (NULL);
 		}
 		push(stack_a, nb);
@@ -96,10 +97,16 @@ t_stack	*get_int_from_argv(int argc, char **argv)
 	while (i < argc)
 	{
 		if (ft_strchr(argv[i], ' '))
+		{
+			free_stack(stack_a);
 			return (NULL);
+		}
 		nb = ft_atoi(argv[i]);
 		if ((nb == 0 && argv[i][0] != '0'))
+		{
+			free_stack(stack_a);
 			return (NULL);
+		}
 		push(stack_a, nb);
 		i++;
 	}
