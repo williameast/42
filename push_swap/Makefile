@@ -1,41 +1,33 @@
 NAME = push_swap
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -Iinclude
 LIBFT_DIR = lib/libft
-LIBFT = ./libft/libft.a
-RM = rm -rf
-SRCS = costs.c maths.c moves.c moves_extended.c position_calculator.c printing.c sanitize.c sort.c utilities.c reinsert.c
-SRC = $(addprefix ./src/,$(SRCS))
+LIBFT = $(LIBFT_DIR)/libft.a
+SRC_DIR = src
 OBJ_DIR = obj
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+SRCS = costs.c maths.c moves.c moves_extended.c position_calculator.c printing.c \
+       sanitize.c sort.c utilities.c reinsert.c
+SRCS := $(addprefix $(SRC_DIR)/, $(SRCS))
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+RM = rm -rf
 
 all: $(NAME)
 
 $(LIBFT):
+	@echo "Building libft..."
 	@make -s -C $(LIBFT_DIR)
-
-$(NAME): $(LIBFT) $(OBJ)
-	@need_linking=false; \
-	if [ ! -f $(NAME) ]; then \
-		need_linking=true; \
-	elif [ "$(OBJ)" -nt "$(NAME)" ]; then \
-		need_linking=true; \
-	elif [ "$(LIBFT)" -nt "$(NAME)" ]; then \
-		need_linking=true; \
-	fi; \
-	if $$need_linking = true; then \
-		echo "Linking executable $(NAME)..."; \
-		$(CC) $(CFLAGS) $(OBJ) -o $(NAME) -L./$(LIBFT_DIR) -lft; \
-		echo "Executable $(NAME) update."; \
-	else \
-		echo "Nothing to do."; \
-	fi
-
-$(OBJ_DIR)/%.o: ./src/%.c | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@echo "Compiling $<..."
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(LIBFT) $(OBJS)
+	@echo "Linking $(NAME)..."
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -L$(LIBFT_DIR) -lft
+	@echo "$(NAME) successfully built."
 
 clean:
 	@$(RM) $(OBJ_DIR)
