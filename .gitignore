@@ -3,3 +3,5 @@
 *.o
 **/*.o
 fdt/lib/libft/*.o
+/fdf/lib/ft_printf/libftprintf.a
+/push_swap/push_swap
