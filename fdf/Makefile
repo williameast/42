@@ -23,8 +23,7 @@ MLX         = $(MLX_DIR)/libmlx.a
 NAME        = $(BIN_DIR)/fdf
 
 ### SOURCE FILES ###
-SRC_FILES   =  \
-              test.c  # Add all your project-specific source files here
+SRC_FILES   = test.c read_file.c
 
 ### HEADERS ###
 HEADERS     =  \
