@@ -1,0 +1,407 @@
+#+title: Checklist for born2beroot
+
+* vm setup
+** set memory to 1024MiB
+** Create a virtual disk image of 10GiB
+** Load it with Debian 12 Bookworm
+* run non-graphical installer
+** machine name weast42
+** username weast
+** Partition
+guided, use disk with encrypted lvm
+** Separate /home /var /tmp partitions
+** parititon disk use max available space
+** exclude ssh server and standard system utilities
+** install GRUB
+** bootloader goes in /dev/sda
+* Configure VM
+** install sudo
+log in as superuser
+#+begin_src sh
+su -
+#+end_src
+
+update:
+#+begin_src sh
+apt update && apt upgrade
+apt install sudo git vim
+#+end_src
+** add user to sudoers file
+#+begin_src sh
+getent group sudo
+usermod -aG sudo weast
+#+end_src
+** establish user privileges
+open sudoers file
+#+begin_src sh
+sudo visudo
+#+end_src
+
+find # User specs,
+#+begin_quote
+weast ALL=(ALL) ALL
+#+end_quote
+** install ssh as user
+
+#+begin_src sh
+sudo apt install openssh-server
+sudo systemctl status ssh
+#+end_src
+*** configure ports for ssh
+#+begin_src sh
+sudo vim /etc/ssh/sshd_config
+#+end_src
+find ~#Port22~
+change to ~Port 4242~ (no hashtag)
+*** restart ssh daemon
+#+begin_src sh
+sudo service ssh restart
+#+end_src
+** install ufw
+#+begin_src sh
+apt install ufw (as superuser? or sudo?)
+sudo ufw enable
+sudo ufw status numbered
+sudo ufw allow ssh
+sudo ufw allow 4242
+sudo ufw status numbered
+#+end_src
+** connecting to ssh from host machine
+*** configure the VM for ssh
+settings > network > advanced > port forwarding
+*** open ports for forwarding
+host port: (whatever, do 10997)
+guest port: 4242
+
+RESTART SSH
+
+#+begin_src sh
+sudo systemctl restart ssh
+#+end_src
+*** ssh into machine
+#+begin_src sh
+ssh weast@127.0.0.1 -p 10997
+#+end_src
+rming knownhosts in .ssh can help if something aint working.
+** set Password policies
+get tool for checking pw quality.
+#+begin_src sh
+sudo apt install libpam-pwquality
+#+end_src
+
+set password policy in /etc/pam.d/common-password
+
+#+begin_src sh
+sudo vim /etc/pam.d/common-password
+#+end_src
+
+find:
+#+begin_quote
+password requisite pam_pwquality.so
+#+end_quote
+
+change to:
+
+#+begin_quote
+password  requisite     pam_pwquality.so  retry=3 minlen=10 ucredit=-1 lcredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
+#+end_quote
+*** configure pw expiry
+#+begin_src sh
+sudo vim /etc/login.defs
+#+end_src
+
+find
+
+#+begin_quote
+PASS_MAX_DAYS 9999 PAS_MIN_DAYS 0 PASS_WARN_AGE 7
+#+end_quote
+
+change to:
+
+#+begin_quote
+PASS_MAX_DAYS 30 PAS_MIN_DAYS 2 PASS_WARN_AGE 7
+#+end_quote
+
+Reboot machine!
+** create a new group
+
+#+begin_src sh
+sudo groupadd user42
+sudo groupadd evaluating
+getent group
+#+end_src
+** create a User, assign them to group
+to show all local users
+
+#+begin_src sh
+cut -d: -f1 /etc/passwd
+#+end_src
+
+#+begin_src sh
+sudo usermod -aG user42 new_user
+sudo usermod -aG evaluating new_user
+#+end_src
+
+to check if successful:
+
+#+begin_src sh
+getent group user42
+getent group evaluating
+groups
+#+end_src
+
+*** check if pw rules are applied:
+#+begin_src sh
+chage -l new_user
+#+end_src
+** create sudo log
+#+begin_src sh
+cd /var/log
+mkdir sudo
+touch sudo/sudo.log
+#+end_src
+** configure sudoers group
+#+begin_src sh
+sudo nano /etc/sudoers (why not vim?)
+sudo vim /etc/sudoers
+#+end_src
+
+#+begin_quote
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/bin:/sbin:/bin"
+Defaults	badpass_message="Yer Shibboleth is not understood! away, Ye!"
+Defaults	passwd_tries=3
+Defaults	logfile="/var/log/sudo/sudo.log"
+Defaults	log_input, log_output
+Defaults	requiretty
+#+end_quote
+** install crontab for cronjobs
+#+begin_src sh
+apt install net-tools
+cd /usr/local/bin
+touch monitoring.sh
+chmod 777 monitoring.sh
+#+end_src
+
+edit monitoring.sh:
+
+#+begin_src sh
+
+#!/bin/bash
+
+get_system_info() {
+    # architecture
+    arch=$(uname -a)
+
+    # physical processors
+    physical_cpu=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
+
+    # virtual processors
+    virtual_cpu=$(grep "^processor" /proc/cpuinfo | wc -l)
+
+    # available RAM
+    fram=$(free -m | awk '$1 == "Mem:" {print $2}')
+    uram=$(free -m | awk '$1 == "Mem:" {print $3}')
+    pram=$(printf "%.2f" "$(echo "scale=2; $uram / $fram * 100" | bc)")
+
+    # available storage
+    fstor=$(df -h --total | grep 'total' | awk '{print $2}')
+    ustor=$(df -h --total | grep 'total' | awk '{print $3}')
+    pstor=$(df -h --total | grep 'total' | awk '{print $5}')
+
+    # CPU utilization rate
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1"%"}')
+
+    # Date and time of last reboot
+    last_reboot=$(who -b | awk '{print $3 " " $4}')
+
+    # Whether LVM is active or not
+    lvmu=$(if [ $(lsblk | grep "lvm" | wc -l) -eq 0 ]; then echo "NO"; else echo -e "YES"; fi)
+
+    # Number of active connections
+    active_connections=$(ss -s | grep estab | awk '{print $4}')
+
+    # Number of users using the server
+    users=$(who | wc -l)
+
+    # IPv4 address and MAC address
+    ipv4=$(hostname -I | awk '{print $1}')
+    mac=$(ip link show | awk '/ether/ {print $2}')
+
+    # Number of commands executed with sudo
+    sudo_commands=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
+
+    # Create the message
+    message=$(cat <<EOF
+Snazzy System Monitoring Report:
+++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+==+=+=+=+=+=
+Architecture & Kernel: $arch
+Physical CPUs: $physical_cpu
+Virtual CPUs: $virtual_cpu
+Available RAM: $uram MB / $fram MB ($pram%)
+Available Storage: $ustor / $fstor ($pstor)
+CPU Utilization: $cpu_usage
+Last Reboot: $last_reboot
+LVM Active: $lvmu
+Active Connections: $active_connections
+Users Logged In: $users
+IPv4 Address: $ipv4
+MAC Address: $mac
+Sudo Commands Executed: $sudo_commands
+++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+==+=+=+=+=+=
+EOF
+)
+
+    # Use wall to send the message to all terminals
+    wall "$message"
+}
+
+get_system_info
+
+#+end_src
+
+cp script into /usr/local/bin/monitoring.sh
+** manage sudo on VM
+switch to vm, ssh does not work for this.
+
+open sudoers file:
+#+begin_src sh
+sudo visudo
+#+end_src
+
+under where its written %sudo ALL=(ALL:ALL) ALL
+#+begin_quote
+<username> ALL=(ALL) NOPASSWD: /usr/local/bin/monitoring.sh
+#+end_quote
+
+#+begin_src sh
+sudo reboot
+#+end_src
+
+#+begin_src sh
+sudo /usr/local/bin/monitoring.sh
+#+end_src
+** set up cronjob
+#+begin_src sh
+sudo crontab -u root -e
+#+end_src
+
+add
+#+begin_quote
+*/10 * * * * /usr/local/bin/monitoring.sh
+#+end_quote
+
+the 10 indicates the minutes.
+** generate vm signature.txt
+
+#+begin_src sh
+cd sgoinfre/students/weast/VirtualBox\ VMs
+shasum <nameofserver>.vdi
+#+end_src
+
+plop in a signature.txt file!!!
+
+** change cronjob
+location of monitoring.sh
+#+begin_src sh
+cd /usr/local/bin
+#+end_src
+
+edit cronjob
+#+begin_src sh
+sudo crontab -u root -e
+#+end_src
+
+to run job every minute, change to
+#+begin_quote (no backslash)
+\* * * * * /usr/local/bin/monitoring.sh
+#+end_quote
+
+every 5 mins
+#+begin_quote (no backslash)
+\*/5 * * * * /usr/local/bin/monitoring.sh
+#+end_quote
+
+* eval commands:
+** get ufw status:
+#+begin_src sh
+sudo ufw status
+#+end_src
+
+** check ssh daemon
+#+begin_src sh
+sudo systemctl status ssh
+#+end_src
+
+** show who has sudo (use getent to check any group member)
+#+begin_src sh
+getent group sudo
+#+end_src
+** add user
+#+begin_src sh
+sudo adduser new <username>
+#+end_src
+** create group
+#+begin_src sh
+sudo groupadd <groupname>
+#+end_src
+** add user to a given group
+#+begin_src sh
+sudo usermod -aG <groupname> <username>
+#+end_src
+** check password expiry
+#+begin_src sh
+sudo chage -l username
+#+end_src
+** get hostname
+#+begin_src sh
+hostnamectl
+#+end_src
+** change hostname (restart vm for this to take effect)
+#+begin_src sh
+hostnamectl set-hostname <new_hostname>
+#+end_src
+** change current hostname? what is the difference
+#+begin_src sh
+sudo vim /etc/hosts
+#+end_src
+
+** display parititons
+#+begin_src sh
+lsblk
+#+end_src
+** show sudo is installed
+#+begin_src sh
+dpkg -l | grep sudo -
+#+end_src
+** UFW: show ufw status
+#+begin_src sh
+sudo ufw status numbered
+#+end_src
+** UFW: open new port
+#+begin_src sh
+sudo ufw allow <port-id>
+#+end_src
+** UFW: delete a rule
+get rule number from ~sudo ufw status numbered~
+#+begin_src sh
+sudo ufw delete <rule number>
+#+end_src
+** ssh
+#+begin_src sh
+ssh weast@localhost -p (HOST PORT!!!!) i.e. 10997
+#+end_src
+** AppArmour
+app armour provides Mandatory access control security. admin can restrict what
+processes are allowed to do.
+check it is running with:
+#+begin_src sh
+aa-status
+#+end_src
+** SElinux
+is a kernel security module that controls access to infrastructure.
+compartmentalisation of apps, users are confined to userland, where privilege
+escalation is made much more difficult. this prevents using buffer overflows to
+harm other users on the system with higher or equal privileges. this includes
+roles based access controls and integrity controls.
