@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 11:32:12 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 13:45:30 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/26 12:44:08 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,18 @@ int	stack_size(t_stack *stack)
 		current = current->next;
 	}
 	return (size);
+}
+
+int	is_sorted(t_stack *stack)
+{
+	t_node	*current;
+
+	current = stack->top;
+	while (current->next != NULL)
+	{
+		if (current->n > current->next->n)
+			return (0);
+		current = current->next;
+	}
+	return (1);
 }

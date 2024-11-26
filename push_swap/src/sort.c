@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 17:05:40 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/26 12:30:23 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void	willysort(t_stack *a, t_stack *b)
 {
 	int	size;
 
+	if (is_sorted(a))
+		return ;
 	size = stack_size(a);
 	if (size < 3)
 		sort_less_than_three(a);

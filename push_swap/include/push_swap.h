@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 12:38:00 by weast             #+#    #+#             */
-/*   Updated: 2024/11/23 15:09:40 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/26 12:30:59 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PUSH_SWAP_H
@@ -45,6 +45,7 @@ int		find_cheapest_target(t_stack *a);
 int		find_min(t_stack *stack);
 int		ft_abs(int nr);
 int		stack_size(t_stack *stack);
+int		is_sorted(t_stack *stack);
 
 /* Declarations from moves.c */
 void	push_to_stack(t_stack *src, t_stack *dest, int print);
