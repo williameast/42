@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 13:03:56 by weast             #+#    #+#             */
-/*   Updated: 2024/07/12 13:30:16 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/26 15:31:23 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <unistd.h>
 
-int		ft_strlen(char *str);
+int		ft_strlen2(char *str);
 char	*ft_strchr(const char *str, int c);
 int		ft_putchar(char c);
 int		ft_putstr(char *s);

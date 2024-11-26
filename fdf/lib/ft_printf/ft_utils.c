@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 13:01:33 by weast             #+#    #+#             */
-/*   Updated: 2024/07/12 13:19:25 by weast            ###   ########.fr       */
+/*   Updated: 2024/11/26 15:32:32 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_putchar(char c)
 	return (1);
 }
 
-int	ft_strlen(char *str)
+int	ft_strlen2(char *str)
 {
 	int	i;
 

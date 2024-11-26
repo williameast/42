@@ -1,90 +1,97 @@
-#******************************************************************************#
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: weast <weast@student.42berlin.de>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/26 14:25:08 by weast             #+#    #+#              #
-#    Updated: 2024/11/26 15:06:12 by weast            ###   ########.fr        #
-#                                                                              #
-#******************************************************************************#
 ### COMPILATION ###
 CC      = cc
 FLAGS   = -Wall -Wextra -Werror
 
-### EXE ###
-NAME    = fdf
+### DIRECTORIES ###
+SRC_DIR     = src
+OBJ_DIR     = obj
+BIN_DIR     = bin
+INC_DIR		= include
 
-### INCLUDES ###
-LIB_DIR = lib
+### LIBRARIES ###
+LIBFT_DIR   = lib/libft
+PRINTF_DIR  = lib/ft_printf
+GNL_DIR     = lib/get_next_line
+MLX_DIR     = lib/mlx
 
-LIBFT   = $(LIB_DIR)/libft
-MLX     = $(LIB_DIR)/mlx
-PRINTF	= $(LIB_DIR)/ft_printf
-GNL		= $(LIB_DIR)/get_next_line/get_next_line.c
+### LIBRARY TARGETS ###
+LIBFT       = $(LIBFT_DIR)/libft.a
+PRINTF      = $(PRINTF_DIR)/libftprintf.a
+MLX         = $(MLX_DIR)/libmlx.a
 
-
-### PATHS ###
-OBJ_PATH = obj
-HEADER  = include
-SRC_PATH = src
+### EXECUTABLE ###
+NAME        = $(BIN_DIR)/fdf
 
 ### SOURCE FILES ###
-SOURCES = test.c
+SRC_FILES   =  \
+              test.c  # Add all your project-specific source files here
 
-### OBJECTS ###
-SRCS = $(addprefix $(SRC_PATH)/, $(SOURCES))
-OBJS = $(addprefix $(OBJ_PATH)/, $(SOURCES:.c=.o))
+### HEADERS ###
+HEADERS     =  \
+				$(INC_DIR)/fdf.h \
+				$(LIBFT_DIR)/libft.h \
+				$(PRINTF_DIR)/ft_printf.h \
+				$(GNL_DIR)/get_next_line.h
+
+### OBJECT FILES ###
+SRC_OBJS    = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
+GNL_OBJS    = $(addprefix $(OBJ_DIR)/, get_next_line.o get_next_line_utils.o)
 
 ### COLORS ###
 NOC         = \033[0m
-BOLD        = \033[1m
-UNDERLINE   = \033[4m
-BLACK       = \033[1;30m
-RED         = \033[1;31m
 GREEN       = \033[1;32m
-YELLOW      = \033[1;33m
 BLUE        = \033[1;34m
-VIOLET      = \033[1;35m
-CYAN        = \033[1;36m
-WHITE       = \033[1;37m
+RED         = \033[1;31m
 
 ### RULES ###
 
-all: lib tmp $(NAME)
+all: $(NAME)
 
-lib:
-	@echo "$(GREEN)Creating lib files$(CYAN)"
-	@make -C $(LIBFT)
-	@make -C $(PRINTF)
-	@make -C $(MLX)
+$(NAME): $(LIBFT) $(PRINTF) $(GNL_OBJS) $(SRC_OBJS)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(FLAGS) -L$(LIBFT_DIR) -L$(PRINTF_DIR) -L$(MLX_DIR) -o $@ $^ -lft -lftprintf -lmlx -lXext -lX11 -lm
+	@echo "$(GREEN)Executable created: $(NAME)$(NOC)"
 
-$(NAME): $(OBJS)
-	$(CC) $(FLAGS) $(GNL) -L $(LIBFT) -L $(PRINTF) -L $(MLX) -o $@ $^ -lft -lmlx -lXext -lX11 -lm -lz
-	@echo "$(GREEN)Project successfully compiled$(NOC)"
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(FLAGS) -Iinclude -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I$(GNL_DIR) -I$(MLX_DIR) -c -o $@ $<
+	@echo "$(BLUE)Compiled: $(notdir $<) -> $(notdir $@)$(NOC)"
 
-tmp:
-	@mkdir -p $(OBJ_PATH)
+$(OBJ_DIR)/get_next_line.o: $(GNL_DIR)/get_next_line.c $(HEADERS)
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(FLAGS) -Iinclude -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I$(GNL_DIR) -I$(MLX_DIR) -c -o $@ $<
+	@echo "$(BLUE)Compiled: get_next_line.c -> get_next_line.o$(NOC)"
 
-$(OBJ_PATH)/%.o: $(SRC_PATH)/%.c $(HEADER)/$(NAME).h
-	@$(CC) $(FLAGS) -I$(HEADER) -I$(PRINTF) -I$(LIBFT) -I$(MLX) -c -o $@ $<
-	@echo "$(BLUE)Creating object file -> $(WHITE)$(notdir $@)... $(RED)[Done]$(NOC)"
+$(OBJ_DIR)/get_next_line_utils.o: $(GNL_DIR)/get_next_line_utils.c $(HEADERS)
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(FLAGS) -Iinclude -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I$(GNL_DIR) -I$(MLX_DIR) -c -o $@ $<
+	@echo "$(BLUE)Compiled: get_next_line_utils.c -> get_next_line_utils.o$(NOC)"
+
+$(LIBFT):
+	@echo "$(GREEN)Building Libft$(NOC)"
+	@make -C $(LIBFT_DIR)
+
+$(PRINTF):
+	@echo "$(GREEN)Building ft_printf$(NOC)"
+	@make -C $(PRINTF_DIR)
+
+# Note: MLX doesn't use fclean or relink unnecessarily.
+$(MLX):
+	@echo "$(GREEN)Building MLX$(NOC)"
+	@make -C $(MLX_DIR)
 
 clean:
-	@echo "$(GREEN)Cleaning library object files$(CYAN)"
-	@make clean -C $(LIBFT)
-	@make clean -C $(MLX)
-	@make clean -C $(PRINTF)
-	@rm -rf $(OBJ_PATH)
+	@echo "$(RED)Cleaning object files$(NOC)"
+	@rm -rf $(OBJ_DIR)
+	@make clean -C $(LIBFT_DIR)
+	@make clean -C $(PRINTF_DIR)
 
 fclean: clean
-	@echo "$(GREEN)Cleaning all files$(CYAN)"
-	@rm -f $(NAME)
-	@make fclean -C $(LIBFT)
-	# @make fclean -C $(MLX)
+	@echo "$(RED)Removing executable and libraries$(NOC)"
+	@rm -rf $(BIN_DIR)
+	@make fclean -C $(LIBFT_DIR)
+	@make fclean -C $(PRINTF_DIR)
 
-re: fclean
-	@$(MAKE) all -j
+re: fclean all
 
-.PHONY: all lib tmp clean fclean re
+.PHONY: all clean fclean re

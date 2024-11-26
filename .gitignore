@@ -5,3 +5,7 @@
 fdt/lib/libft/*.o
 /fdf/lib/ft_printf/libftprintf.a
 /push_swap/push_swap
+/fdf/bin/
+/fdf/lib/libft/libft.a
+/get_next_line/get_next_line.h.gch
+/get_next_line/a.out
