@@ -1,2 +1,5 @@
 /push_swap/lib/libft/*.o
 /push_swap/lib/libft/libft.a
+*.o
+**/*.o
+fdt/lib/libft/*.o
