@@ -91,6 +91,9 @@ fclean: clean
 	@make fclean -C $(LIBFT_DIR)
 	@make fclean -C $(PRINTF_DIR)
 
+get_deps:
+	@sudo apt install libx11-dev libxext-dev libbsd-dev clang
+
 re: fclean all
 
 .PHONY: all clean fclean re
