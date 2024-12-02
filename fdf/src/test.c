@@ -6,106 +6,127 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:55:50 by weast             #+#    #+#             */
-/*   Updated: 2024/11/26 17:36:32 by weast            ###   ########.fr       */
+/*   Updated: 2024/12/02 23:15:10 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-#define	WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-
-
-/* void	my_mlx_pixel_put(t_data *data, int x, int y, int color) */
-/* { */
-/* 	char	*dst; */
-
-/* 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8)); */
-/* 	*(unsigned int*)dst = color; */
-/* } */
-
-
-/* int	main(void) */
-/* { */
-/* 	void	*mlx; */
-/* 	void	*mlx_win; */
-/* 	t_data	img; */
-
-/* 	mlx = mlx_init(); */
-/* 	mlx_win = mlx_new_window(mlx, 800, 600, "Hello world!"); */
-/* 	img.img = mlx_new_image(mlx, 800, 600); */
-/* 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, */
-/* 								&img.endian); */
-/* 	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000); */
-/* 	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0); */
-/* 	mlx_loop(mlx); */
-/*     /\* read_something(); *\/ */
-/* } */
-
-int	rgb_to_int(double r, double g, double b)
-{
-  int	out;
-
-  out = 0;
-  out |= (int)(b * 255);
-  out |= (int)(g * 255) << 8;
-  out |= (int)(r * 255) << 16;
-  return (out);
-}
-
-
-void ft_put_pixel(t_data *data, int x, int y, int color)
+void	ft_put_pixel(t_graphics *gfx, t_crd crd, int colour)
 {
     char *pxl;
+    int buffer_index = gfx->active_buffer;
 
-    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
+    if (crd.x >= 0 && crd.x < WIN_WIDTH && crd.y >= 0 && crd.y < WIN_HEIGHT)
     {
-        pxl = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-        *(unsigned int *)pxl = color;
+        pxl = gfx->addr[buffer_index] + (crd.y * gfx->line_length + crd.x * (gfx->bits_per_pixel) / 8);
+        *(unsigned int *)pxl = colour;
     }
 }
 
-void ft_draw_line(t_data *data, int x1, int y1, int x2, int y2, int color)
+t_crd	init_crd(int x, int y)
 {
-    int step;
-    int x;
-    int y;
-    int i;
-    int delta_x;
-    int delta_y;
+    return ((t_crd){x, y});
+}
 
-    delta_x = x2 - x1;
-    delta_y = y2 - y1;
-    if (abs(delta_x) >= abs(delta_y))
-        step = abs(delta_x);
+// Function to draw a rectangle
+void draw_rectangle1(t_graphics *gfx, t_crd start, int width, int height, int color)
+{
+    t_crd crd; // Coordinate for the current pixel
+    int i, j;
+
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            crd.x = start.x + j; // Set current x coordinate
+            crd.y = start.y + i; // Set current y coordinate
+            ft_put_pixel(gfx, crd, color);
+        }
+    }
+}
+
+void draw_rectangle(char *buffer_addr, int line_length, int bits_per_pixel,
+                    t_crd start, int width, int height, int color)
+{
+    t_crd crd; // Coordinate for the current pixel
+    int i, j;
+
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            crd.x = start.x + j; // Set current x coordinate
+            crd.y = start.y + i; // Set current y coordinate
+
+            // Ensure the pixel is within bounds
+            if (crd.x >= 0 && crd.x < WIN_WIDTH && crd.y >= 0 && crd.y < WIN_HEIGHT)
+            {
+                char *pixel = buffer_addr + (crd.y * line_length + crd.x * (bits_per_pixel / 8));
+                *(unsigned int *)pixel = color;
+            }
+        }
+    }
+}
+
+
+void	swap_buffers(t_graphics *gfx)
+{
+    gfx->active_buffer = 1 - gfx->active_buffer;
+}
+
+int render(void *param)
+{
+    t_graphics *gfx = (t_graphics *)param;
+
+    // Determine inactive buffer
+    int inactive_buffer = 1 - gfx->active_buffer;
+
+    // Clear the inactive buffer
+    for (int y = 0; y < WIN_HEIGHT; y++)
+        for (int x = 0; x < WIN_WIDTH; x++)
+            *(unsigned int *)(gfx->addr[inactive_buffer] + (y * gfx->line_length + x * (gfx->bits_per_pixel / 8))) = 0x000000;
+
+    // Draw to the inactive buffer
+    if (gfx->active_buffer == 0)
+        draw_rectangle(gfx->addr[inactive_buffer], gfx->line_length, gfx->bits_per_pixel,
+                       (t_crd){0, 0}, 100, 100, GREEN);
     else
-        step = abs(delta_y);
-    delta_x = delta_x / step;
-    delta_y = delta_y / step;
-    x = x1;
-    y = x2;
-    i = 0;
-    while (i < step)
-    {
-        ft_put_pixel(data, x, y, color);
-        x += delta_x;
-        y += delta_y;
-        i++;
-    }
+        draw_rectangle(gfx->addr[inactive_buffer], gfx->line_length, gfx->bits_per_pixel,
+                       (t_crd){150, 150}, 100, 100, RED);
+
+    // Swap buffers
+    swap_buffers(gfx);
+
+    // Display the active buffer
+    mlx_put_image_to_window(gfx->mlx_ptr, gfx->win_ptr, gfx->buffer[gfx->active_buffer], 0, 0);
+
+    usleep(500000); // Pause for 500ms to visualize swapping
+    return 0;
 }
 
-int	main(void)
+int main()
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_data	img;
+    /* t_graphics gfx; */
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Hello world!");
-	img.img = mlx_new_image(mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
-  ft_draw_line(&img, 10, 10,200, 200, 0xFFFFFF);
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+    /* // Initialize MiniLibX and create window */
+    /* gfx.mlx_ptr = mlx_init(); */
+    /* gfx.win_ptr = mlx_new_window(gfx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Double Buffering"); */
+
+    /* // Create image buffers */
+    /* for (int i = 0; i < 2; i++) */
+    /* { */
+    /*     gfx.buffer[i] = mlx_new_image(gfx.mlx_ptr, WIN_WIDTH, WIN_HEIGHT); */
+    /*     gfx.addr[i] = mlx_get_data_addr(gfx.buffer[i], &gfx.bits_per_pixel, &gfx.line_length, &gfx.endian); */
+    /* } */
+    /* gfx.active_buffer = 0; */
+
+    /* // Set render loop */
+    /* mlx_loop_hook(gfx.mlx_ptr, render, &gfx); */
+
+    /* // Start MiniLibX event loop */
+    /* mlx_loop(gfx.mlx_ptr); */
+
+    /* return 0; */
+    printf("valid: %i\n", check_extension(".txtpdf", ".txt"));
 }

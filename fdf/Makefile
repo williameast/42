@@ -74,7 +74,6 @@ $(PRINTF):
 	@echo "$(GREEN)Building ft_printf$(NOC)"
 	@make -C $(PRINTF_DIR)
 
-# Note: MLX doesn't use fclean or relink unnecessarily.
 $(MLX):
 	@echo "$(GREEN)Building MLX$(NOC)"
 	@make -C $(MLX_DIR)
