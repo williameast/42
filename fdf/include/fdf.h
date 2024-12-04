@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/02 21:05:58 by William          ###   ########.fr       */
+/*   Updated: 2024/12/04 14:01:02 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -48,7 +48,14 @@ typedef struct s_graphics {
 typedef struct s_crd {
 	int	x;
 	int	y;
+    int	z;
 }			t_crd;
+
+typedef struct s_map {
+    int	**grid;
+	int	rows;
+	int	cols;
+}			t_map;
 
 /* declarations */
 /* Declarations from read_file.c */

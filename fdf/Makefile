@@ -23,7 +23,7 @@ MLX         = $(MLX_DIR)/libmlx.a
 NAME        = $(BIN_DIR)/fdf
 
 ### SOURCE FILES ###
-SRC_FILES   = test.c read_file.c
+SRC_FILES   = main.c
 
 ### HEADERS ###
 HEADERS     =  \
@@ -48,7 +48,7 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(PRINTF) $(GNL_OBJS) $(SRC_OBJS)
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(FLAGS) -L$(LIBFT_DIR) -L$(PRINTF_DIR) -L$(MLX_DIR) -o $@ $^ -lft -lftprintf -lmlx -lXext -lX11 -lm
+	$(CC) $(FLAGS) -L$(LIBFT_DIR) -L$(PRINTF_DIR) -L$(MLX_DIR) -o $@ $^ -g -lft -lftprintf -lmlx -lXext -lX11 -lm
 	@echo "$(GREEN)Executable created: $(NAME)$(NOC)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
@@ -91,7 +91,12 @@ fclean: clean
 	@make fclean -C $(PRINTF_DIR)
 
 get_deps:
+	@echo "$(GREEN)installing dependencies $(NOC)"
 	@sudo apt install libx11-dev libxext-dev libbsd-dev clang
+
+install_mlx:
+	@echo "$(BLUE)checking if MLX is installed$(NOC)"
+	@echo ""
 
 re: fclean all
 
