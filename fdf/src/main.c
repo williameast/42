@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:48:38 by William           #+#    #+#             */
-/*   Updated: 2024/12/04 16:40:32 by William          ###   ########.fr       */
+/*   Updated: 2024/12/08 19:46:36 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ t_map *init_map(void)
 	map->grid = NULL;
 	map->rows = 0;
 	map->cols = 0;
-	ft_printf("map initisalized.\n");
+	ft_printf("INFO: map initisalized.\n");
 	return (map);
 }
 
@@ -84,38 +84,73 @@ void	free_map(t_map *map)
 	free(map);
 }
 
-
-int	*parse_line(char *line, int cols)
+void free_split(char **split)
 {
-	char **split_line;
-	int	*row;
-	int	i;
-	int	nb;
+    int i = 0;
 
-	i = 0;
-	split_line = ft_split(line, ' ');
-	row = malloc(sizeof(int) * cols);
-	if (!split_line || !row)
-		return (NULL);
-	while (i < cols)
-	{
-		nb = ft_atoi(split_line[i]);
-		if (nb == 0 && split_line[i][0] != '0')
-		{
-			// initiate the freeing proceedure!
-			return (NULL);
-		}
-		row[i] = ft_atoi(split_line[i]);
-		free(split_line[i]);
-	}
-	return (row);
+	if (!split)
+		return ;
+    while (split[i])
+        free(split[i]);
+    free(split);
 }
+
+
+int *parse_line(char *line, int cols)
+{
+    char **split_line;
+    int *row;
+    int i;
+    int nb;
+
+    i = 0;
+    ft_printf("INFO: Entering parse_line\n");
+    split_line = ft_split(line, ' ');
+    if (!split_line)
+    {
+        ft_printf("ERROR: split_line allocation failed\n");
+        return (NULL);
+    }
+    ft_printf("INFO: split line successful\n");
+
+    row = malloc(sizeof(int) * cols);
+    if (!row)
+    {
+        ft_printf("ERROR: row allocation failed\n");
+        free_split(split_line); // Free split_line before returning
+        return (NULL);
+    }
+    ft_printf("INFO: Allocated row, cols: %i\n", cols);
+
+    while (i < cols && split_line[i])
+    {
+        ft_printf("INFO: Processing split_line[%i]: %s\n", i, split_line[i]);
+        nb = ft_atoi(split_line[i]);
+        if (nb == 0 && split_line[i][0] != '0')
+        {
+            ft_printf("ERROR: Invalid number in line at index %i: %s\n", i, split_line[i]);
+            free_split(split_line);
+            free(row);
+            return (NULL);
+        }
+        row[i] = nb;
+        ft_printf("INFO: Parsed number: %i into row[%i]\n", nb, i);
+        free(split_line[i]); // Free individual split element
+        i++;
+    }
+
+    ft_printf("INFO: Finished parsing line\n");
+    free(split_line); // Free the array of pointers itself
+    return (row);
+}
+
+
 // Function to resize the map's array and add a new row
 int add_row_to_map(t_map *map, int *row)
 {
     int **new_grid;
 
-	printf("adding row to map");
+	printf("INFO: adding row to map\n");
     new_grid = ft_realloc(map->grid, sizeof(int *) * map->rows, sizeof(int *) * (map->rows + 1));
     if (!new_grid)
         return (0);
@@ -143,20 +178,20 @@ t_map	*load_map(char *filename)
 	{
 		if (map->cols == 0)
 			map->cols = split_array_len(ft_split(next_line, ' '));
-		printf("preparing to parse line...\n");
+		ft_printf("INFO: preparing to parse line...\n");
+		ft_printf("line: %s, map cols: %i \n", next_line, map->cols);
 		row = parse_line(next_line, map->cols);
 		free(next_line);
 		if (!row || !add_row_to_map(map, row))
 		{
 			ft_printf("ERROR: line processing failed.\n");
-			free(next_line);
 			free_map(map);
 			close(fd);
 			return (NULL);
 		}
 	}
 	close(fd);
-	printf("closed file with fd: %i", fd);
+	printf("INFO: closed file with fd: %i", fd);
 	return (map);
 }
 
@@ -187,23 +222,23 @@ int main(int argc, char **argv)
 
     if (argc != 2)
     {
-        printf("Usage: %s <filename>\n", argv[0]);
+        ft_printf("Usage: %s <filename>\n", argv[0]);
         return 1;
     }
 
     map = load_map(argv[1]);
     if (!map)
     {
-        printf("Error loading map.\n");
+        ft_printf("ERROR: Error loading map.\n");
         return 1;
     }
 
-    printf("Map (%d rows x %d cols):\n", map->rows, map->cols);
+    ft_printf("Map (%d rows x %d cols):\n", map->rows, map->cols);
     for (int x = 0; x < map->rows; x++)
     {
         for (int y = 0; y < map->cols; y++)
-            printf("%d ", map->grid[x][y]);
-        printf("\n");
+            ft_printf("%d ", map->grid[x][y]);
+        ft_printf("\n");
     }
 
     free_map(map);
