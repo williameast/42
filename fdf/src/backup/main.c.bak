@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 13:48:38 by William           #+#    #+#             */
-/*   Updated: 2024/12/08 19:46:36 by William          ###   ########.fr       */
+/*   Updated: 2024/12/13 13:31:10 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,6 @@ void *ft_realloc(void *ptr, size_t old_size, size_t new_size)
     ft_memcpy(new_ptr, ptr, old_size < new_size ? old_size : new_size);
     free(ptr); // Free the old memory block
     return (new_ptr);
-}
-
-// check if the filename has the appropriate extension.
-int	check_extension(char *filename, char *ext)
-{
-  int	ext_len;
-  int	name_len;
-
-  ext_len = ft_strlen(ext);
-  name_len = ft_strlen(filename);
-  if (ext_len >= name_len)
-    return (0);
-  return(!ft_strncmp(ext, &filename[name_len - ext_len], 5));
 }
 
 // initialize a map.

@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/04 14:01:02 by William          ###   ########.fr       */
+/*   Updated: 2024/12/12 14:26:33 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -49,26 +49,38 @@ typedef struct s_crd {
 	int	x;
 	int	y;
     int	z;
+	int	visible;
 }			t_crd;
 
 typedef struct s_map {
-    int	**grid;
+    t_crd	*points;
 	int	rows;
 	int	cols;
 }			t_map;
 
 /* declarations */
-/* Declarations from read_file.c */
-int read_something(void);
-int	check_extension(char *filename, char *ext);
+/* Declarations from parsing.c */
 
-/* Declarations from test.c */
-void	ft_put_pixel(t_graphics *gfx, t_crd crd, int colour);
-t_crd	init_crd(int x, int y);
-void draw_rectangle1(t_graphics *gfx, t_crd start, int width, int height, int color);
-void	swap_buffers(t_graphics *gfx);
-int render(void *param);
-int main();
+/* Declarations from utils.c */
+int	check_extension(char *filename, char *ext);
+void	free_char_array(char **array);
+void	free_int_array(int *array);
+void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
+
+/* Declarations from init.c */
+t_map *init_map(void);
+
+/* Declarations from printing.c */
+void	print_point(t_crd c);
+void	print_coordinates(t_crd *crd, int count);
+
+/* Declarations from map_mgmt.c */
+t_crd populate_coordinate(int x, int y, char *z);
+char	*read_full_map_as_str(char	*file);
+t_crd	*parse_row_to_coordinates(char *row, int y, int *count);
+char **split_rows(const char *map_str);
+int append_row_to_map(t_crd **map, int *total_count, t_crd *row_coords, int row_count);
+t_crd *parse_map(const char *map_str, int *total_coordinates);
 
 /* declarations end */
 
