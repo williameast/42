@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/13 16:31:55 by William          ###   ########.fr       */
+/*   Updated: 2024/12/14 01:16:27 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,20 @@
 
 int main(int argc, char **argv)
 {
-	char	*map_str;
-	t_crd	*map;
-	int	*map_len;
+	t_map	*map;
 
-	map_len = 0;
     if (argc != 2)
     {
         ft_printf("Usage: %s <filename>\n", argv[0]);
         return 1;
     }
-	map_str = read_full_map_as_str(argv[1]);
-	map = parse_map(map_str, map_len);
-	print_coordinates(map, map_len);
+	map = parse_map(argv[1]);
+	print_map_struct(map);
+	print_map(map);
     if (!map)
     {
         ft_printf("ERROR: Error loading map.\n");
         return 1;
     }
-	ft_printf("%s", map);
-	free(map);
+	free_map(map);
 }

@@ -60,6 +60,7 @@ typedef struct s_map {
 
 /* declarations */
 /* Declarations from parsing.c */
+int main(int argc, char **argv);
 
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
@@ -72,15 +73,18 @@ t_map *init_map(void);
 
 /* Declarations from printing.c */
 void	print_point(t_crd c);
+void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
+void	print_map(t_map *map);
 
 /* Declarations from map_mgmt.c */
 t_crd populate_coordinate(int x, int y, char *z);
-char	*read_full_map_as_str(char	*file);
-t_crd	*parse_row_to_coordinates(char *row, int y, int *count);
-char **split_rows(const char *map_str);
-int append_row_to_map(t_crd **map, int *total_count, t_crd *row_coords, int row_count);
-t_crd *parse_map(const char *map_str, int *total_coordinates);
+char *read_full_map_as_str(char *file);
+t_crd *parse_row_to_coordinates(char *row, int y, int *count);
+t_map *initialize_map();
+void	free_map(t_map *map);
+int append_row_to_map(t_map *map, t_crd *row_coords, int row_count);
+t_map *parse_map(char *filename);
 
 /* declarations end */
 

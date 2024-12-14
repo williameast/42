@@ -6,153 +6,188 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/13 16:30:20 by William          ###   ########.fr       */
+/*   Updated: 2024/12/14 00:07:19 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-// creates a single coordinate.
-// visible = 1 means point is to be plotted.
-// visible = 0 means point should be skipped. we keep the point
-// to make managament of the grid easier
-// visible = -1 indicates that the detected value is invalid (i.e. not a valid integer)
-// this is used to "fail" the map-generation process.
 t_crd populate_coordinate(int x, int y, char *z)
 {
-	t_crd out;
+    t_crd out;
 
-	out.x = x;
-	out.y = y;
-	if (z[0] != '\0')
-	{
-		out.z = ft_atoi(z);
-		if (out.z == 0 && z[0] != '0')
-		{
-			out.visible = -1;
-			ft_printf("ERROR: Invalid input of <%s> detected.\n", z);
-		}
-		else
-			out.visible = 1;
-	}
-	else
-	{
-		out.z = 0;
-		out.visible = 0;
-	}
-	return (out);
-}
-// creates a string with the full length of the map.
-char	*read_full_map_as_str(char	*file)
-{
-	int	fd;
-	char	*full_line;
-	char	*next_line;
-	char	*temp;
-
-	full_line = ft_strdup("");
-	if ((fd = open(file, O_RDONLY)) < 0 || !check_extension(file, ".fdf"))
-	{
-		ft_printf("ERROR: <%s> is not valid or could not be found.\n", file);
-		return (NULL);
-	}
-	while ((next_line = get_next_line(fd)) != NULL)
-	{
-		temp = ft_strjoin(full_line, next_line);
-		free(full_line);
-		full_line = temp;
-		free(next_line);
-	}
-	close(fd);
-	free(temp);
-	return (full_line);
+    out.x = x;
+    out.y = y;
+    if (z[0] != '\0')
+    {
+        out.z = ft_atoi(z);
+        if (out.z == 0 && z[0] != '0')
+        {
+            out.visible = -1;
+            ft_printf("ERROR: Invalid input of <%s> detected.\n", z);
+        }
+        else
+            out.visible = 1;
+    }
+    else
+    {
+        out.z = 0;
+        out.visible = 0;
+    }
+    return (out);
 }
 
-t_crd	*parse_row_to_coordinates(char *row, int y, int *count)
-{
-	char **split;
-	t_crd *coordinates;
-	int	i;
 
-	if (!row || !count)
-		return (NULL);
-	split = ft_split(row, ' ');
-	if (!split)
-		return (NULL);
-	*count = 0;
-	while (split[*count])
-		(*count)++;
-	coordinates = malloc(sizeof(t_crd) * (*count));
-	if (!coordinates)
-		return NULL;
-	i = 0;
-	while (i < *count)
-	{
-		coordinates[i] = populate_coordinate(i, y, split[i]);
-		if (coordinates[i].visible == -1)
-		{
-			free(coordinates);
-			free_char_array(split);
-			return (NULL);
-		}
-		i++;
-	}
-	free_char_array(split);
-	return (coordinates);
+// Function to read the full map as a single string
+char *read_full_map_as_str(char *file)
+{
+    int fd;
+    char *full_line;
+    char *next_line;
+    char *temp;
+
+    full_line = ft_strdup("");
+    if ((fd = open(file, O_RDONLY)) < 0 || !check_extension(file, ".fdf"))
+    {
+        ft_printf("ERROR: <%s> is not valid or could not be found.\n", file);
+        return (NULL);
+    }
+    while ((next_line = get_next_line(fd)) != NULL)
+    {
+        temp = ft_strjoin(full_line, next_line);
+        free(full_line);
+        full_line = temp;
+        free(next_line);
+    }
+    close(fd);
+    return (full_line);
 }
 
-char **split_rows(const char *map_str)
+// Function to split rows into a coordinate array
+t_crd *parse_row_to_coordinates(char *row, int y, int *count)
 {
-    char **rows;
+    char **split;
+    t_crd *coordinates;
+    int i;
 
-	rows = ft_split(map_str, '\n');
-    if (!rows)
-        ft_printf("ERROR: Row split allocation failed.\n");
-    return (rows);
+    if (!row || !count)
+        return (NULL);
+    split = ft_split(row, ' ');
+    if (!split)
+        return (NULL);
+    *count = 0;
+    while (split[*count])
+        (*count)++;
+    coordinates = malloc(sizeof(t_crd) * (*count));
+    if (!coordinates)
+    {
+        free_char_array(split);
+        return NULL;
+    }
+    for (i = 0; i < *count; i++)
+    {
+        coordinates[i] = populate_coordinate(i, y, split[i]);
+        if (coordinates[i].visible == -1)
+        {
+            free(coordinates);
+            free_char_array(split);
+            return (NULL);
+        }
+    }
+    free_char_array(split);
+    return (coordinates);
 }
 
-// Function to append row coordinates to the map array, reallocating memory as needed
-int append_row_to_map(t_crd **map, int *total_count, t_crd *row_coords, int row_count)
+// Function to initialize a t_map structure
+t_map *initialize_map()
 {
-    t_crd	*new_map;
-	new_map = realloc(*map, sizeof(t_crd) * (*total_count + row_count));
-    if (!new_map)
-        return 0; // Allocation failure
-    *map = new_map;
-    for (int j = 0; j < row_count; j++)
-        (*map)[*total_count + j] = row_coords[j];
-    *total_count += row_count;
-    return 1; // Success
+
+	ft_printf("INFO: initializing map...\n");
+    t_map *map = malloc(sizeof(t_map));
+    if (!map)
+        return NULL;
+    map->points = NULL;
+    map->rows = 0;
+    map->cols = 0;
+	ft_printf("INFO: initialized map.\n");
+    return map;
 }
 
-// Main function to parse the map string into a t_crd array
-t_crd *parse_map(const char *map_str, int *total_coordinates)
+void	free_map(t_map *map)
 {
-    char **row_split = split_rows(map_str);
+	ft_printf("INFO: freeing map...\n");
+	free(map->points);
+	free(map);
+	ft_printf("INFO: map has been freed.\n");
+}
+
+// Function to append a row to the map
+int append_row_to_map(t_map *map, t_crd *row_coords, int row_count)
+{
+    t_crd *new_points;
+	new_points = realloc(map->points, sizeof(t_crd) * (map->rows * map->cols + row_count));
+    if (!new_points)
+        return 0;
+    map->points = new_points;
+    for (int i = 0; i < row_count; i++)
+        map->points[map->rows * map->cols + i] = row_coords[i];
+    if (row_count > map->cols)
+        map->cols = row_count;
+    map->rows++;
+    return 1;
+}
+// Function to read and split the map file into rows
+static char **read_and_split_map(char *filename)
+{
+    char *map_str = read_full_map_as_str(filename);
+    if (!map_str)
+        return NULL;
+    char **row_split = ft_split(map_str, '\n');
+    free(map_str);
+    if (!row_split)
+        ft_printf("ERROR: Failed to split map string into rows.\n");
+    return row_split;
+}
+
+// Function to process a single row and append it to the map
+static int process_row(t_map *map, char *row, int row_index)
+{
+    int row_count = 0;
+    t_crd *row_coords = parse_row_to_coordinates(row, row_index, &row_count);
+    if (!row_coords)
+        return 0; // Indicates failure
+    if (!append_row_to_map(map, row_coords, row_count))
+    {
+        free(row_coords);
+        return 0; // Indicates failure
+    }
+    free(row_coords);
+    return 1; // Indicates success
+}
+
+// Main parsing function
+t_map *parse_map(char *filename)
+{
+    char **row_split;
+
+	row_split = read_and_split_map(filename);
     if (!row_split)
         return NULL;
-    t_crd *map = NULL;
-    int total_count = 0;
+    t_map *map = initialize_map();
+    if (!map)
+    {
+        free_char_array(row_split);
+        return NULL;
+    }
     for (int i = 0; row_split[i] != NULL; i++)
     {
-        int row_count = 0;
-        t_crd *row_coords = parse_row_to_coordinates(row_split[i], i, &row_count);
-        if (!row_coords)
+        if (!process_row(map, row_split[i], i))
         {
-            free(map);
+            free_map(map);
             free_char_array(row_split);
             return NULL;
         }
-        if (!append_row_to_map(&map, &total_count, row_coords, row_count))
-        {
-            free(row_coords);
-            free(map);
-            free_char_array(row_split);
-            return NULL;
-        }
-        free(row_coords); // Free row_coords after copying its contents
     }
     free_char_array(row_split);
-    *total_coordinates = total_count;
     return map;
 }
