@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/15 20:49:10 by William          ###   ########.fr       */
+/*   Updated: 2024/12/15 22:39:00 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ char *read_full_map_as_str(char *file)
     if ((fd = open(file, O_RDONLY)) < 0 || !check_extension(file, ".fdf"))
     {
         ft_printf("ERROR: <%s> is not valid or could not be found.\n", file);
+        free(full_line);
         return (NULL);
     }
     while ((next_line = get_next_line(fd)) != NULL)
@@ -63,6 +64,7 @@ char *read_full_map_as_str(char *file)
 }
 
 // Function to split rows into a coordinate array
+// TODO: make sure that empty rows are handled!!!
 static t_crd *parse_row_to_coordinates(char *row, int y, int *count)
 {
     char **split;
@@ -71,15 +73,14 @@ static t_crd *parse_row_to_coordinates(char *row, int y, int *count)
 
     if (!row || !count)
         return (NULL);
-    split = ft_split(row, ' ');
-    print_char_array(split);
+    split = ft_split_strict(row, ' ');
     if (!split)
         return (NULL);
     *count = 0;
     while (split[*count])
         (*count)++;
     coordinates = malloc(sizeof(t_crd) * (*count));
-    if (!coordinates)
+    if (!coordinates || *count == 0) // return NULL if line is empty!
     {
         free_char_array(split);
         return NULL;
@@ -98,17 +99,18 @@ static t_crd *parse_row_to_coordinates(char *row, int y, int *count)
     return (coordinates);
 }
 
-// Function to initialize a t_map structure
 t_map *initialize_map()
 {
-
 	ft_printf("INFO: initializing map...\n");
     t_map *map = malloc(sizeof(t_map));
     if (!map)
         return NULL;
     map->points = NULL;
+    map->points_len = 0;
     map->rows = 0;
     map->cols = 0;
+    map->z_max = 0;
+    map->z_min = 0;
 	ft_printf("INFO: initialized map.\n");
     return map;
 }
@@ -121,21 +123,23 @@ void	free_map(t_map *map)
 	ft_printf("INFO: map has been freed.\n");
 }
 
-// Function to append a row to the map
-static int append_row_to_map(t_map *map, t_crd *row_coords, int row_count)
+static int append_row_to_map(t_map *map, t_crd *row_coords, int row_length)
 {
     t_crd *new_points;
-	new_points = realloc(map->points, sizeof(t_crd) * (map->rows * map->cols + row_count));
+
+    new_points = realloc(map->points, sizeof(t_crd) * (map->points_len + row_length));
     if (!new_points)
         return 0;
     map->points = new_points;
-    for (int i = 0; i < row_count; i++)
-        map->points[map->rows * map->cols + i] = row_coords[i];
-    if (row_count > map->cols)
-        map->cols = row_count;
+    for (int i = 0; i < row_length; i++)
+        map->points[map->points_len + i] = row_coords[i];
+    if (row_length > map->cols)
+        map->cols = row_length;
     map->rows++;
+    map->points_len += row_length;
     return 1;
 }
+
 // Function to read and split the map file into rows
 static char **read_and_split_map(char *filename)
 {
@@ -152,6 +156,7 @@ static char **read_and_split_map(char *filename)
 }
 
 // Function to process a single row and append it to the map
+// TODO you could use this to send a -1 signal indicating an empty line.
 static int process_row(t_map *map, char *row, int row_index)
 {
     int row_count = 0;
@@ -167,7 +172,6 @@ static int process_row(t_map *map, char *row, int row_index)
     return 1; // Indicates success
 }
 
-// Main parsing function
 t_map *parse_map(char *filename)
 {
     char **row_split;

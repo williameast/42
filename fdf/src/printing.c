@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/15 19:18:14 by William          ###   ########.fr       */
+/*   Updated: 2024/12/15 21:39:41 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,17 @@ void	print_point(t_crd c)
 
 void	print_map_struct(t_map *map)
 {
-	int len;
-	int	i;
 	t_crd t;
+	int	i;
 
 	if (!map)
 	{
 		ft_printf("ERROR: map object not found, nothing to print.\n");
 		return ;
 	}
-	len = map->rows * map->cols;
 	i = 0;
-	ft_printf("rows: %i, cols: %i\n", map->rows, map->cols);
-
-	while (i < len)
+	ft_printf("rows: %i, cols: %i, points_len: %i\n", map->rows, map->cols, map->points_len);
+	while (i < map->points_len)
 	{
 		t = map->points[i];
 		ft_printf("%i: x= %i, y= %i, z= %i, vis= %i\n", i, t.x, t.y, t.z, t.visible);
@@ -72,25 +69,25 @@ void	print_coordinates(t_crd *crd, int count)
 	}
 }
 
-void print_map(t_map *map)
-{
-    if (!map || !map->points || map->rows <= 0 || map->cols <= 0)
-    {
-        ft_printf("Invalid map data.\n");
-        return;
-    }
+/* void print_map(t_map *map) */
+/* { */
+/*     if (!map || !map->points || map->rows <= 0 || map->cols <= 0) */
+/*     { */
+/*         ft_printf("Invalid map data.\n"); */
+/*         return; */
+/*     } */
 
-    for (int i = 0; i < map->rows; i++)
-    {
-        for (int j = 0; j < map->cols; j++)
-        {
-            int index = i * map->cols + j;
-			if (map->points[index].visible)
-            ft_printf("%d ", map->points[index].z);
-			else
-            ft_printf("  ");
+/*     for (int i = 0; i < map->rows; i++) */
+/*     { */
+/*         for (int j = 0; j < map->cols; j++) */
+/*         { */
+/*             int index = i * map->cols + j; */
+/* 			if (map->points[index].visible) */
+/*             ft_printf("%d ", map->points[index].z); */
+/* 			else */
+/*             ft_printf("  "); */
 
-        }
-        ft_printf("\n");
-    }
-}
+/*         } */
+/*         ft_printf("\n"); */
+/*     } */
+/* } */

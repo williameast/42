@@ -2,12 +2,10 @@
 
 
 
-* read files
-* [ ] check extension is valid
-* [ ] check file exists
-* [ ] read first line of the file in
-** [ ] store it in char *
-** [ ] split the char * at the separator (  ) ftsplit
-** [ ] take that char **, iterating through it, atoi'ing each element
-** [ ] add each element to an array of length of char - 1.
-** [ ]
+* [ ] read files
+** [ ] handle empty lines in the middle of the file.
+** [ ] handle visible and non visible lines.
+** [ ] find zmax and zmin and add them to the map struct
+* [ ] draw lines
+* [ ] make 3D
+* [ ] make things move

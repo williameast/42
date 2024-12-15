@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/12 14:26:33 by William          ###   ########.fr       */
+/*   Updated: 2024/12/15 22:38:29 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -54,8 +54,11 @@ typedef struct s_crd {
 
 typedef struct s_map {
     t_crd	*points;
+	int	points_len;
 	int	rows;
 	int	cols;
+	int z_max;
+	int z_min;
 }			t_map;
 
 /* declarations */
