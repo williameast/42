@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/14 00:07:19 by William          ###   ########.fr       */
+/*   Updated: 2024/12/15 20:49:10 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_crd populate_coordinate(int x, int y, char *z)
     return (out);
 }
 
-
 // Function to read the full map as a single string
 char *read_full_map_as_str(char *file)
 {
@@ -64,7 +63,7 @@ char *read_full_map_as_str(char *file)
 }
 
 // Function to split rows into a coordinate array
-t_crd *parse_row_to_coordinates(char *row, int y, int *count)
+static t_crd *parse_row_to_coordinates(char *row, int y, int *count)
 {
     char **split;
     t_crd *coordinates;
@@ -73,6 +72,7 @@ t_crd *parse_row_to_coordinates(char *row, int y, int *count)
     if (!row || !count)
         return (NULL);
     split = ft_split(row, ' ');
+    print_char_array(split);
     if (!split)
         return (NULL);
     *count = 0;
@@ -122,7 +122,7 @@ void	free_map(t_map *map)
 }
 
 // Function to append a row to the map
-int append_row_to_map(t_map *map, t_crd *row_coords, int row_count)
+static int append_row_to_map(t_map *map, t_crd *row_coords, int row_count)
 {
     t_crd *new_points;
 	new_points = realloc(map->points, sizeof(t_crd) * (map->rows * map->cols + row_count));
@@ -140,6 +140,8 @@ int append_row_to_map(t_map *map, t_crd *row_coords, int row_count)
 static char **read_and_split_map(char *filename)
 {
     char *map_str = read_full_map_as_str(filename);
+
+    ft_printf("INFO: map string: \n%s\n", map_str);
     if (!map_str)
         return NULL;
     char **row_split = ft_split(map_str, '\n');

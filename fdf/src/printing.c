@@ -6,12 +6,24 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/14 01:24:31 by William          ###   ########.fr       */
+/*   Updated: 2024/12/15 19:18:14 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
+
+void	print_char_array(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i] != NULL)
+	{
+		ft_printf("INFO: array[%i] = <%s>\n", i, arr[i]);
+		i++;
+	}
+}
 
 void	print_point(t_crd c)
 {
@@ -62,27 +74,23 @@ void	print_coordinates(t_crd *crd, int count)
 
 void print_map(t_map *map)
 {
-    int i;
-    int j;
-	int k;
-
-    i = 0;
-	k = 0;
-	if (!map)
-		return ;
-	while (k++ < map->cols)
-		ft_printf("__");
-	ft_printf("\n");
-    while (i < map->rows)
+    if (!map || !map->points || map->rows <= 0 || map->cols <= 0)
     {
-        j = 0;
-        while (j < map->cols)
+        ft_printf("Invalid map data.\n");
+        return;
+    }
+
+    for (int i = 0; i < map->rows; i++)
+    {
+        for (int j = 0; j < map->cols; j++)
         {
-			if (map->points[i * map->cols + j].visible)
-				ft_printf("%i ", map->points[i * map->cols + j].z);
-            j++;
+            int index = i * map->cols + j;
+			if (map->points[index].visible)
+            ft_printf("%d ", map->points[index].z);
+			else
+            ft_printf("  ");
+
         }
         ft_printf("\n");
-        i++;
     }
 }

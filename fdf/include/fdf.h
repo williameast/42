@@ -67,23 +67,23 @@ int	check_extension(char *filename, char *ext);
 void	free_char_array(char **array);
 void	free_int_array(int *array);
 void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
+char **ft_split_strict(const char *s, char c);
 
 /* Declarations from init.c */
 t_map *init_map(void);
 
 /* Declarations from printing.c */
+void	print_char_array(char **arr);
 void	print_point(t_crd c);
 void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
-void	print_map(t_map *map);
+void print_map(t_map *map);
 
 /* Declarations from map_mgmt.c */
 t_crd populate_coordinate(int x, int y, char *z);
 char *read_full_map_as_str(char *file);
-t_crd *parse_row_to_coordinates(char *row, int y, int *count);
 t_map *initialize_map();
 void	free_map(t_map *map);
-int append_row_to_map(t_map *map, t_crd *row_coords, int row_count);
 t_map *parse_map(char *filename);
 
 /* declarations end */
