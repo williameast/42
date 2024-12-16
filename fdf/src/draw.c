@@ -6,21 +6,65 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 23:14:30 by William           #+#    #+#             */
-/*   Updated: 2024/12/15 23:15:12 by William          ###   ########.fr       */
+/*   Updated: 2024/12/16 18:03:34 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
 
-void	ft_put_pixel(t_graphics *gfx, t_crd crd, int colour)
+// RGBa pixel encoder on 1d char array.
+// TODO add out of bounds check.
+void	draw_pixel(char *data, t_crd point, int colour, int stride)
 {
-    char *pxl;
-    int buffer_index = gfx->active_buffer;
+    int	offset;
 
-    if (crd.x >= 0 && crd.x < WIN_WIDTH && crd.y >= 0 && crd.y < WIN_HEIGHT)
+    offset =  (4 * point->x) + (point->y * stride);
+    data[offset] = color & 0xFF; // b
+    data[offset + 1] = (color >> 8) & 0xFF; // g
+    data[offset + 2] = (color >> 16) & 0xFF; // r
+    data[offset + 3] = (color >> 24) & 0xFF; // alpha
+}
+
+int	derivative_of(int a, int b)
+{
+    return(abs(a - b));
+}
+
+int	pos_or_neg(int a, int b)
+{
+    if (a < b)
+        return (1);
+    return (-1);
+}
+
+
+// might need an init function to avoid norminette.
+void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride)
+{
+    t_crd d;
+    t_crd s;
+    int	error;
+
+    d->x = derivative_of(dest->x, src->x);
+    d->y = derivative_of(dest->y, src->y);
+    s->x = pos_or_neg(src->x, dest->x);
+    s->y = pos_or_neg(src->y, dest->y);
+    error = dx - dy;
+    while(1)
     {
-        pxl = gfx->addr[buffer_index] + (crd.y * gfx->line_length + crd.x * (gfx->bits_per_pixel) / 8);
-        *(unsigned int *)pxl = colour;
+        draw_pixel(*data, src, colour, stride);
+        if (src->x == dest->x && src->y == dest->y)
+            break;
+        if ((error * 2)> -d->y)
+        {
+            error -= d->y;
+            src->x += s->x
+        }
+        if ((error * 2) < d->x)
+        {
+            error += dx;
+            src->y += s->y;
+        }
     }
 }

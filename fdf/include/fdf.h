@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/15 22:38:29 by William          ###   ########.fr       */
+/*   Updated: 2024/12/16 17:09:21 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -32,17 +32,17 @@
 #define	RED  0xFF0000
 #define	BLUE  0x0000FF
 
-/* stuctures */
-typedef struct s_graphics {
-    void *mlx_ptr;         // Connection instance
-    void *win_ptr;         // Window instance
-    void *buffer[2];       // Two image buffers for double buffering
-    char *addr[2];         // Memory addresses of the buffers
-    int bits_per_pixel;    // Bits per pixel
-    int line_length;       // Bytes per row
-    int endian;            // Endian type
-    int active_buffer;     // Tracks the currently active buffer
-} t_graphics;
+/* /\* stuctures *\/ */
+/* typedef struct s_graphics { */
+/*     void *mlx_ptr;         // Connection instance */
+/*     void *win_ptr;         // Window instance */
+/*     void *buffer[2];       // Two image buffers for double buffering */
+/*     char *addr[2];         // Memory addresses of the buffers */
+/*     int bits_per_pixel;    // Bits per pixel */
+/*     int line_length;       // Bytes per row */
+/*     int endian;            // Endian type */
+/*     int active_buffer;     // Tracks the currently active buffer */
+/* } t_graphics; */
 
 
 typedef struct s_crd {
