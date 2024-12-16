@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/16 17:09:21 by William          ###   ########.fr       */
+/*   Updated: 2024/12/16 18:07:24 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -32,17 +32,17 @@
 #define	RED  0xFF0000
 #define	BLUE  0x0000FF
 
-/* /\* stuctures *\/ */
-/* typedef struct s_graphics { */
-/*     void *mlx_ptr;         // Connection instance */
-/*     void *win_ptr;         // Window instance */
-/*     void *buffer[2];       // Two image buffers for double buffering */
-/*     char *addr[2];         // Memory addresses of the buffers */
-/*     int bits_per_pixel;    // Bits per pixel */
-/*     int line_length;       // Bytes per row */
-/*     int endian;            // Endian type */
-/*     int active_buffer;     // Tracks the currently active buffer */
-/* } t_graphics; */
+/* stuctures */
+typedef struct s_graphics {
+    void *mlx_ptr;         // Connection instance
+    void *win_ptr;         // Window instance
+    void *buffer;
+    char *addr;
+    int bits_per_pixel;    // Bits per pixel
+    int line_length;       // Bytes per row
+    int endian;            // Endian type
+    int active_buffer;     // Tracks the currently active buffer
+} t_graphics;
 
 
 typedef struct s_crd {
@@ -63,7 +63,8 @@ typedef struct s_map {
 
 /* declarations */
 /* Declarations from parsing.c */
-int main(int argc, char **argv);
+void	init_graphics(t_graphics *gfx, int width, int height, char *title);
+int main();
 
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
@@ -73,14 +74,18 @@ void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
 char **ft_split_strict(const char *s, char c);
 
 /* Declarations from init.c */
-t_map *init_map(void);
 
 /* Declarations from printing.c */
 void	print_char_array(char **arr);
 void	print_point(t_crd c);
 void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
-void print_map(t_map *map);
+
+/* Declarations from draw.c */
+void	draw_pixel(char *data, t_crd point, int colour, int stride);
+int	derivative_of(int a, int b);
+int	pos_or_neg(int a, int b);
+void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride);
 
 /* Declarations from map_mgmt.c */
 t_crd populate_coordinate(int x, int y, char *z);
