@@ -23,7 +23,16 @@ MLX         = $(MLX_DIR)/libmlx.a
 NAME        = $(BIN_DIR)/fdf
 
 ### SOURCE FILES ###
-SRC_FILES   = utils.c parsing.c printing.c map_mgmt.c init.c draw.c
+SRC_FILES   = \
+				utils.c \
+				parsing.c \
+				printing.c \
+				map_mgmt.c \
+				init.c \
+				draw.c \
+				input.c \
+				affine.c \
+				maffs.c \
 
 ### HEADERS ###
 HEADERS     =  \

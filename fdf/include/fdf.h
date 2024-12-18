@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/16 18:07:24 by William          ###   ########.fr       */
+/*   Updated: 2024/12/18 20:18:58 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -28,22 +28,23 @@
 
 #define	WIN_WIDTH 640
 #define 	WIN_HEIGHT 640
+#define 	TITLE "Wire mesh render"
+
 #define	GREEN  0x00FF00
 #define	RED  0xFF0000
 #define	BLUE  0x0000FF
 
 /* stuctures */
-typedef struct s_graphics {
-    void *mlx_ptr;         // Connection instance
-    void *win_ptr;         // Window instance
-    void *buffer;
-    char *addr;
-    int bits_per_pixel;    // Bits per pixel
-    int line_length;       // Bytes per row
-    int endian;            // Endian type
-    int active_buffer;     // Tracks the currently active buffer
-} t_graphics;
-
+/* typedef struct s_graphics { */
+/*     void *mlx_ptr;         // Connection instance */
+/*     void *win_ptr;         // Window instance */
+/*     void *buffer; */
+/*     char *addr; */
+/*     int bits_per_pixel;    // Bits per pixel */
+/*     int line_length;       // Bytes per row */
+/*     int endian;            // Endian type */
+/*     int active_buffer;     // Tracks the currently active buffer */
+/* } t_graphics; */
 
 typedef struct s_crd {
 	int	x;
@@ -61,9 +62,28 @@ typedef struct s_map {
 	int z_min;
 }			t_map;
 
+typedef struct s_image {
+	void	*img_ptr;
+	char *addr;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+}			t_image;
+
+typedef struct s_ctrl {
+	void			*mlx_ptr;
+	void			*win_ptr;
+	t_map			*map;
+	t_image			image;
+}			t_ctrl;
+
+
+
+
 /* declarations */
 /* Declarations from parsing.c */
-void	init_graphics(t_graphics *gfx, int width, int height, char *title);
+t_ctrl init_session(void);
+int render_loop(t_ctrl *session);
 int main();
 
 /* Declarations from utils.c */
@@ -73,7 +93,11 @@ void	free_int_array(int *array);
 void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
 char **ft_split_strict(const char *s, char c);
 
+/* Declarations from input.c */
+
 /* Declarations from init.c */
+
+/* Declarations from render.c */
 
 /* Declarations from printing.c */
 void	print_char_array(char **arr);
@@ -82,10 +106,12 @@ void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
 
 /* Declarations from draw.c */
-void	draw_pixel(char *data, t_crd point, int colour, int stride);
+void draw_pixel(t_image image, t_crd point, int color);
+void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
+
+/* Declarations from maffs.c */
 int	derivative_of(int a, int b);
 int	pos_or_neg(int a, int b);
-void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride);
 
 /* Declarations from map_mgmt.c */
 t_crd populate_coordinate(int x, int y, char *z);
@@ -93,6 +119,12 @@ char *read_full_map_as_str(char *file);
 t_map *initialize_map();
 void	free_map(t_map *map);
 t_map *parse_map(char *filename);
+
+/* Declarations from affine.c */
+void	flatten3d_to_2d(t_crd point, double z_rotation);
+void	scale(t_crd point, int scale_factor);
+void	rotate_x(t_crd point, double x_rotation);
+void	rotate_y(t_crd point, double y_rotation);
 
 /* declarations end */
 

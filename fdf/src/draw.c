@@ -6,41 +6,28 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 23:14:30 by William           #+#    #+#             */
-/*   Updated: 2024/12/16 18:29:26 by William          ###   ########.fr       */
+/*   Updated: 2024/12/18 21:29:59 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
 
-// RGBa pixel encoder on 1d char array.
-// TODO add out of bounds check.
-void	draw_pixel(char *data, t_crd point, int colour, int stride)
+
+void draw_pixel(t_image image, t_crd point, int color)
 {
-    int	offset;
-
-    offset =  (4 * point.x) + (point.y * stride);
-    data[offset] = colour & 0xFF; // b
-    data[offset + 1] = (colour >> 8) & 0xFF; // g
-    data[offset + 2] = (colour >> 16) & 0xFF; // r
-    data[offset + 3] = (colour >> 24) & 0xFF; // alpha
+    char *pixel;
+    if (point.x >= 0 && point.x < WIN_WIDTH && point.y >= 0 && point.y < WIN_HEIGHT)
+    {
+        pixel = image.addr + (point.y * image.line_length + point.x * (image.bits_per_pixel / 8));
+        *(int *)pixel = color;
+    }
+    else
+        ft_printf("WARN: attempted to draw pixel out of bounds.\n");
 }
-
-int	derivative_of(int a, int b)
-{
-    return(abs(a - b));
-}
-
-int	pos_or_neg(int a, int b)
-{
-    if (a < b)
-        return (1);
-    return (-1);
-}
-
 
 // might need an init function to avoid norminette.
-void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride)
+void	draw_line(t_image image, t_crd src, t_crd dest, int colour)
 {
     t_crd d;
     t_crd s;
@@ -53,10 +40,10 @@ void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride)
     error = d.x - d.y;
     while(1)
     {
-        draw_pixel(data, src, colour, stride);
+        draw_pixel(image, src, colour);
         if (src.x == dest.x && src.y == dest.y)
             break;
-        if ((error * 2)> -d.y)
+        if ((error * 2) > -d.y)
         {
             error -= d.y;
             src.x += s.x;
@@ -68,3 +55,4 @@ void	draw_line(char *data, t_crd src, t_crd dest, int colour, int stride)
         }
     }
 }
+

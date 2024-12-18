@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/16 18:26:16 by William          ###   ########.fr       */
+/*   Updated: 2024/12/18 21:25:34 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,42 +31,66 @@
 /* 	free_map(map); */
 /* } */
 
-void	init_graphics(t_graphics *gfx, int width, int height, char *title)
+
+t_ctrl init_session(void)
 {
-	gfx->mlx_ptr = mlx_init();
-	if (!gfx->mlx_ptr)
-	{
-		ft_printf("ERROR: failed to init MLX.\n");
-		return ;
-	}
-	gfx->win_ptr = mlx_new_window(gfx->mlx_ptr, width, height, title);
-	if (!gfx->win_ptr)
-	{
-		ft_printf("ERROR: failed to create window.\n");
-		return ;
-	}
-	gfx->buffer = mlx_new_image(gfx->mlx_ptr, width, height);
-	if (!gfx->buffer)
-	{
-		ft_printf("ERROR: failed to create buffer for image.\n");
-		return ;
-	}
-	gfx->addr = mlx_get_data_addr(gfx->buffer, &gfx->bits_per_pixel, &gfx->line_length, &gfx->endian);
-	gfx->active_buffer = 0;
+    t_ctrl session;
+
+    session.mlx_ptr = mlx_init();
+    if (!session.mlx_ptr)
+    {
+        printf("ERROR: Failed to initialize MLX.\n");
+        exit(EXIT_FAILURE);
+    }
+    session.win_ptr = mlx_new_window(session.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, "Moving Lines");
+    if (!session.win_ptr)
+    {
+        printf("ERROR: Failed to create a window.\n");
+        exit(EXIT_FAILURE);
+    }
+    session.image.img_ptr = mlx_new_image(session.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+    session.image.addr = mlx_get_data_addr(session.image.img_ptr,
+                                           &session.image.bits_per_pixel,
+                                           &session.image.line_length,
+                                           &session.image.endian);
+    return session;
+}
+
+int render_loop(t_ctrl *session)
+{
+    static int offset = 0;
+    t_crd start = {100 + offset, 100, 0, 1};
+    t_crd end = {200 + offset, 300, 0, 1};
+
+    // Clear the image by filling it with black
+    for (int y = 0; y < WIN_HEIGHT; y++)
+        for (int x = 0; x < WIN_WIDTH; x++)
+		{
+			t_crd temp = {x, y, 0, 1};
+			draw_pixel(session->image, temp , 0x000000);
+		}
+
+    // Draw the moving line
+    draw_line(session->image, start, end, 0xFF0000); // Red color
+
+    // Update the offset for animation
+    offset = (offset + 2) % WIN_WIDTH;
+
+    // Display the image
+    mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0);
+
+    return 0;
 }
 
 int main()
 {
-	t_graphics gfx;
-	t_crd start, end;
-	init_graphics(&gfx, WIN_WIDTH, WIN_HEIGHT, "doodlin");
+    t_ctrl session;
 
-	start = (t_crd) {100, 100, 1, 1};
-	end = (t_crd) {200, 325, 1, 1};
+    session = init_session();
 
-    draw_line(gfx.addr, start, end, 0xFF0000, gfx.line_length);  // Red Line
+    // Set up the render loop
+    mlx_loop_hook(session.mlx_ptr, render_loop, &session);
+    mlx_loop(session.mlx_ptr);
 
-    mlx_put_image_to_window(gfx.mlx_ptr, gfx.win_ptr, gfx.buffer, 0, 0);
-    mlx_loop(gfx.mlx_ptr);
     return 0;
 }
