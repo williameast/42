@@ -25,7 +25,7 @@ NAME        = $(BIN_DIR)/fdf
 ### SOURCE FILES ###
 SRC_FILES   = \
 				utils.c \
-				parsing.c \
+				main.c \
 				printing.c \
 				map_mgmt.c \
 				init.c \

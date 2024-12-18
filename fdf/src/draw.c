@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 23:14:30 by William           #+#    #+#             */
-/*   Updated: 2024/12/18 21:29:59 by William          ###   ########.fr       */
+/*   Updated: 2024/12/18 21:34:29 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void draw_pixel(t_image image, t_crd point, int color)
         pixel = image.addr + (point.y * image.line_length + point.x * (image.bits_per_pixel / 8));
         *(int *)pixel = color;
     }
-    else
-        ft_printf("WARN: attempted to draw pixel out of bounds.\n");
 }
 
 // might need an init function to avoid norminette.

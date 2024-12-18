@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/18 20:18:58 by William          ###   ########.fr       */
+/*   Updated: 2024/12/18 23:52:01 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -34,18 +34,6 @@
 #define	RED  0xFF0000
 #define	BLUE  0x0000FF
 
-/* stuctures */
-/* typedef struct s_graphics { */
-/*     void *mlx_ptr;         // Connection instance */
-/*     void *win_ptr;         // Window instance */
-/*     void *buffer; */
-/*     char *addr; */
-/*     int bits_per_pixel;    // Bits per pixel */
-/*     int line_length;       // Bytes per row */
-/*     int endian;            // Endian type */
-/*     int active_buffer;     // Tracks the currently active buffer */
-/* } t_graphics; */
-
 typedef struct s_crd {
 	int	x;
 	int	y;
@@ -55,22 +43,24 @@ typedef struct s_crd {
 
 typedef struct s_map {
     t_crd	*points;
-	int	points_len;
-	int	rows;
-	int	cols;
-	int z_max;
-	int z_min;
+	int		points_len;
+	int		rows;
+	int		cols;
+	int 	z_max;
+	int 	z_min;
 }			t_map;
 
 typedef struct s_image {
 	void	*img_ptr;
-	char *addr;
-	int bits_per_pixel;
-	int line_length;
-	int endian;
+	char 	*addr;
+	int		bits_per_pixel;
+	int 	line_length;
+	int 	endian;
 }			t_image;
 
 typedef struct s_ctrl {
+	/* double			scale; */
+	/* double			z_scale; */
 	void			*mlx_ptr;
 	void			*win_ptr;
 	t_map			*map;
@@ -81,11 +71,6 @@ typedef struct s_ctrl {
 
 
 /* declarations */
-/* Declarations from parsing.c */
-t_ctrl init_session(void);
-int render_loop(t_ctrl *session);
-int main();
-
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
 void	free_char_array(char **array);
@@ -105,6 +90,12 @@ void	print_point(t_crd c);
 void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
 
+/* Declarations from main.c */
+int	render_loop(t_ctrl *session);
+t_ctrl init_session(void);
+void	clear_screen(t_ctrl *session, int colour);
+int main(int argc, char *argv[]);
+
 /* Declarations from draw.c */
 void draw_pixel(t_image image, t_crd point, int color);
 void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
@@ -122,7 +113,8 @@ t_map *parse_map(char *filename);
 
 /* Declarations from affine.c */
 void	flatten3d_to_2d(t_crd point, double z_rotation);
-void	scale(t_crd point, int scale_factor);
+void	scale(t_crd *point, int x_scalar, int y_scalar);
+void	translate(t_crd *point, int x_scalar, int y_scalar);
 void	rotate_x(t_crd point, double x_rotation);
 void	rotate_y(t_crd point, double y_rotation);
 
