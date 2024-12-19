@@ -91,6 +91,7 @@ void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
 
 /* Declarations from main.c */
+void connect_visible_neighbors(t_image image, t_map *map, int color);
 int	render_loop(t_ctrl *session);
 t_ctrl init_session(void);
 void	clear_screen(t_ctrl *session, int colour);
