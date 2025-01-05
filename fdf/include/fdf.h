@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/18 23:52:01 by William          ###   ########.fr       */
+/*   Updated: 2024/12/30 14:21:29 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -71,6 +71,9 @@ typedef struct s_ctrl {
 
 
 /* declarations */
+/* Declarations from controls.c */
+int	test_hook(int keycode, t_ctrl *session);
+
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
 void	free_char_array(char **array);
@@ -92,7 +95,7 @@ void	print_coordinates(t_crd *crd, int count);
 
 /* Declarations from main.c */
 void connect_visible_neighbors(t_image image, t_map *map, int color);
-int	render_loop(t_ctrl *session);
+int render_loop(t_ctrl *session);
 t_ctrl init_session(void);
 void	clear_screen(t_ctrl *session, int colour);
 int main(int argc, char *argv[]);

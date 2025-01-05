@@ -33,6 +33,7 @@ SRC_FILES   = \
 				input.c \
 				affine.c \
 				maffs.c \
+				controls.c \
 
 ### HEADERS ###
 HEADERS     =  \

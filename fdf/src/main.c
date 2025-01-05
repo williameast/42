@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/19 01:28:47 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 11:52:12 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void connect_visible_neighbors(t_image image, t_map *map, int color)
 }
 int render_loop(t_ctrl *session)
 {
-    connect_visible_neighbors(session->image, session->map, 0xFF0000); // Red lines
+    connect_visible_neighbors(session->image, session->map, RED); // Red lines
     mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0);
     return 0;
 }
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 	i = 0;
     session = init_session();
     if (argc != 2)
-    {
+	{
         ft_printf("Usage: %s <filename>\n", argv[0]);
         return 1;
     }
