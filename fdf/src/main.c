@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 11:52:12 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 16:29:43 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,32 @@ void connect_visible_neighbors(t_image image, t_map *map, int color)
         }
     }
 }
+/* int render_loop(t_ctrl *session) */
+/* { */
+/*     /\* connect_visible_neighbors(session->image, session->map, RED); // Red lines *\/ */
+/*     mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0); */
+/*     return 0; */
+/* } */
 int render_loop(t_ctrl *session)
 {
-    connect_visible_neighbors(session->image, session->map, RED); // Red lines
+    int i;
+    t_crd *point;
+
+    // Loop through each point in the map
+    for (i = 0; i < session->map->rows * session->map->cols; i++)
+    {
+        point = &session->map->points[i];
+        if (point->visible) // Only draw visible points
+        {
+            draw_pixel(session->image, *point, RED); // Replace RED with the desired color
+        }
+    }
+
     mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0);
     return 0;
 }
+
+
 
 /* int	render_loop(t_ctrl *session) */
 /* { */
@@ -125,8 +145,10 @@ int main(int argc, char *argv[])
 	while (i < session.map->points_len)
 	{
 		point = &session.map->points[i];
-		scale(point, 30, 30);
-		translate(point, 10, 10);
+		translate(point, -5, -5, 0);
+		scale(point, 30, 30, 30);
+		flatten_isometrically(point);
+		translate(point, WIN_WIDTH/2, WIN_HEIGHT/2, 0);
 		i++;
 	}
 	print_map_struct(map);

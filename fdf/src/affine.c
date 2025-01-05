@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:19:40 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 11:52:21 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 16:18:31 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,38 @@
 void	flatten3d_to_2d(t_crd point, double z_rotation);
 
 
-void	scale(t_crd *point, int x_scalar, int y_scalar)
+void	scale(t_crd *point, int x_scalar, int y_scalar, int z_scalar)
 {
 	point->x *= x_scalar;
 	point->y *= y_scalar;
+	point->z *= z_scalar;
 }
 
-void	translate(t_crd *point, int x_scalar, int y_scalar)
+void	translate(t_crd *point, int x_scalar, int y_scalar, int z_scalar)
 {
 	point->x += x_scalar;
 	point->y += y_scalar;
+	point->z += z_scalar;
+
+
+if (point->x < 0 || point->x >= WIN_WIDTH ||
+    point->y < 0 || point->y >= WIN_HEIGHT)
+    	ft_printf("INFO: Point out of bounds: x=%d, y=%d\n", point->x, point->y);
 }
+
+void	flatten_isometrically(t_crd *point)
+{
+	int	x;
+	int y;
+
+	x = (point->x - point->y) * 0.866;
+	y = (point->x + point->y) * 0.5 - point->z;
+
+	point->x = x;
+	point->y = y;
+
+}
+
 
 /* static void	rotate_x(t_crd point, double sin_rotation, double cos_rotation); */
 /* { */
@@ -69,16 +90,3 @@ void	translate(t_crd *point, int x_scalar, int y_scalar)
 /* 	point.y = y; */
 
 /* } */
-
-void	convert_iso(t_crd point, double cos_iso, double sin_iso)
-{
-	int	x;
-	int y;
-
-	x = (point.x - point.y) * cos_iso;
-	y = -point.z + (x + point.y)  * sin_iso;
-
-	point.x = x;
-	point.y = y;
-
-}

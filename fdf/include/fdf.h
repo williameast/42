@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2024/12/30 14:21:29 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 14:51:22 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -33,6 +33,8 @@
 #define	GREEN  0x00FF00
 #define	RED  0xFF0000
 #define	BLUE  0x0000FF
+#define	COS30  0.866025
+#define	SIN30 0.5
 
 typedef struct s_crd {
 	int	x;
@@ -72,7 +74,6 @@ typedef struct s_ctrl {
 
 /* declarations */
 /* Declarations from controls.c */
-int	test_hook(int keycode, t_ctrl *session);
 
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
@@ -117,10 +118,9 @@ t_map *parse_map(char *filename);
 
 /* Declarations from affine.c */
 void	flatten3d_to_2d(t_crd point, double z_rotation);
-void	scale(t_crd *point, int x_scalar, int y_scalar);
-void	translate(t_crd *point, int x_scalar, int y_scalar);
-void	rotate_x(t_crd point, double x_rotation);
-void	rotate_y(t_crd point, double y_rotation);
+void	scale(t_crd *point, int x_scalar, int y_scalar, int z_scalar);
+void	translate(t_crd *point, int x_scalar, int y_scalar, int z_scalar);
+void	flatten_isometrically(t_crd *point);
 
 /* declarations end */
 
