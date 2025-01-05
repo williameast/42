@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:19:40 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 16:18:31 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 19:21:06 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,6 @@ void	translate(t_crd *point, int x_scalar, int y_scalar, int z_scalar)
 	point->z += z_scalar;
 
 
-if (point->x < 0 || point->x >= WIN_WIDTH ||
-    point->y < 0 || point->y >= WIN_HEIGHT)
-    	ft_printf("INFO: Point out of bounds: x=%d, y=%d\n", point->x, point->y);
 }
 
 void	flatten_isometrically(t_crd *point)

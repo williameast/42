@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2025/01/05 14:51:22 by William          ###   ########.fr       */
+/*   Updated: 2025/01/05 22:06:25 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -40,6 +40,8 @@ typedef struct s_crd {
 	int	x;
 	int	y;
     int	z;
+	int grid_x;
+	int grid_y;
 	int	visible;
 }			t_crd;
 
@@ -67,6 +69,7 @@ typedef struct s_ctrl {
 	void			*win_ptr;
 	t_map			*map;
 	t_image			image;
+	int				draw_complete;
 }			t_ctrl;
 
 
@@ -74,6 +77,9 @@ typedef struct s_ctrl {
 
 /* declarations */
 /* Declarations from controls.c */
+void exit_program(t_ctrl *ctrl);
+int key_hook(int keycode, t_ctrl *ctrl);
+int close_window(t_ctrl *ctrl);
 
 /* Declarations from utils.c */
 int	check_extension(char *filename, char *ext);
@@ -103,7 +109,7 @@ int main(int argc, char *argv[]);
 
 /* Declarations from draw.c */
 void draw_pixel(t_image image, t_crd point, int color);
-void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
+void draw_line(t_image image, t_crd src, t_crd dest, int color);
 
 /* Declarations from maffs.c */
 int	derivative_of(int a, int b);
