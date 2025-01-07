@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:07:12 by William           #+#    #+#             */
-/*   Updated: 2024/12/18 21:15:55 by William          ###   ########.fr       */
+/*   Updated: 2025/01/07 13:58:04 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,4 +158,12 @@ char **ft_split_strict(const char *s, char c)
     }
     arr[j] = NULL; // Null-terminate the array
     return (arr);
+}
+
+int inline_ternary(int	a, int b, int c)
+{
+    if (a)
+        return (b);
+    else
+        return (c);
 }

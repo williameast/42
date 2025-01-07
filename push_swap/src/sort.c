@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:28:55 by William           #+#    #+#             */
-/*   Updated: 2024/11/26 12:30:23 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/07 15:27:50 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,11 @@ int	main(int argc, char *argv[])
 	t_stack	*b;
 
 	if (argc == 2)
+	{
+		if (argv[1][0] == '\0')
+			return (0);
 		a = get_int_from_str(argv[1]);
+	}
 	else
 		a = get_int_from_argv(argc, argv);
 	if (a == NULL || check_for_dup_in_stack(a))
