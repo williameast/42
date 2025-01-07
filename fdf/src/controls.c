@@ -6,15 +6,18 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 22:09:18 by William          ###   ########.fr       */
+/*   Updated: 2025/01/07 11:21:59 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
 
-// kill stuff
-
+/* // kill stuff */
+/* mlx_destroy_window(data->mlx_ptr, data->win_ptr); */
+/* 	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img); */
+/* 	mlx_destroy_display(data->mlx_ptr); */
+/* 	free(data->mlx_ptr); */
 
 void exit_program(t_ctrl *session)
 {
@@ -26,9 +29,12 @@ void exit_program(t_ctrl *session)
 	if (session->image.img_ptr)
 	{
 		mlx_destroy_image(session->mlx_ptr, session->image.img_ptr);
+        mlx_destroy_display(session->mlx_ptr);
         session->image.img_ptr = NULL;
         session->image.addr = NULL;
+        free(session->mlx_ptr);
 	}
+
 	if (session->map)
 	{
 		free_map(session->map);
