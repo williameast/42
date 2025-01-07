@@ -6,18 +6,11 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 15:20:52 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/07 18:07:36 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
-
-
-/* // kill stuff */
-/* mlx_destroy_window(data->mlx_ptr, data->win_ptr); */
-/* 	mlx_destroy_image(data->mlx_ptr, data->img.mlx_img); */
-/* 	mlx_destroy_display(data->mlx_ptr); */
-/* 	free(data->mlx_ptr); */
 
 void exit_program(t_ctrl *session)
 {
@@ -44,14 +37,34 @@ void exit_program(t_ctrl *session)
 		free_map(session->map);
     exit(0);
 }
+
+
+
+
 // Key event handler
-int key_hook(int keycode, t_ctrl *ctrl)
+int key_hook(int keycode, t_ctrl *ctrl, t_offset offset)
 {
-    if (keycode == 65307) // 65307 is the keycode for ESC
-    {
+    if (keycode == KEY_ESC)
         exit_program(ctrl);
-    }
+    if (keycode == KEY_R)
+
+
+    if (keycode == KEY_A)
+        offset.x -= 1; // move left
+    if (keycode == KEY_D)
+        offset.x += 1; // move right
+    if (keycode == KEY_W)
+        offset.y -= 1; // move up
+    if (keycode == KEY_S)
+        offset.y += 1; // move down
+    if (keycode == KEY_J)
+        offset.u += 1; // rotate clockwise?
+    if (keycode == KEY_L)
+        offset.v += 1; // rotate counterclockwise?
+
+
     return (0);
+
 }
 // Window close event handler
 int close_window(t_ctrl *ctrl)

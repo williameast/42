@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 22:11:26 by William          ###   ########.fr       */
+/*   Updated: 2025/01/07 18:43:22 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,51 +55,6 @@ int render_loop(t_ctrl *session)
 
 
 
-/* int	render_loop(t_ctrl *session) */
-/* { */
-/* 	int	i; */
-
-/* 	i = 0; */
-/* 	/\* while (i < session->map->points_len) *\/ */
-/* 	{ */
-/* 		/\* point = session->map->points[i]; *\/ */
-/* 		connect_visible_neighbors(session->image, session->map, RED); */
-/* 		/\* if (point.visible) *\/ */
-/* 		/\* { *\/ */
-/* 		/\* 	scale(&point, 30, 30); *\/ */
-/* 		/\* 	translate(&point, 100, 100); *\/ */
-/* 		/\* 	draw_pixel(session->image, point , RED); *\/ */
-/* 		/\* } *\/ */
-/* 		i++; */
-/* 	} */
-/*     mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0); */
-/*     return 0; */
-/* } */
-
-t_ctrl init_session(void)
-{
-    t_ctrl session;
-
-    session.mlx_ptr = mlx_init();
-    if (!session.mlx_ptr)
-    {
-        printf("ERROR: Failed to initialize MLX.\n");
-        exit(EXIT_FAILURE);
-    }
-    session.win_ptr = mlx_new_window(session.mlx_ptr, WIN_WIDTH, WIN_HEIGHT, TITLE);
-    if (!session.win_ptr)
-    {
-        printf("ERROR: Failed to create a window.\n");
-        exit(EXIT_FAILURE);
-    }
-    session.image.img_ptr = mlx_new_image(session.mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-    session.image.addr = mlx_get_data_addr(session.image.img_ptr,
-                                           &session.image.bits_per_pixel,
-                                           &session.image.line_length,
-                                           &session.image.endian);
-	session.draw_complete = 0;
-    return session;
-}
 
 void	clear_screen(t_ctrl *session, int colour)
 {
@@ -120,6 +75,10 @@ void	clear_screen(t_ctrl *session, int colour)
 	}
 	ft_printf("INFO: Screen cleared\n");
 }
+
+
+
+
 
 int main(int argc, char *argv[])
 {
@@ -153,13 +112,8 @@ int main(int argc, char *argv[])
 	}
 	print_map_struct(map);
     mlx_loop_hook(session.mlx_ptr, render_loop, &session);
-
-    // Set the key hook (ESC detection)
     mlx_key_hook(session.win_ptr, key_hook, &session);
-
-    // Set the window close event (X button)
     mlx_hook(session.win_ptr, 17, 0, close_window, &session); // 17 is the event for the 'X' button
-
     mlx_loop(session.mlx_ptr);
     if (!map)
     {

@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:03:53 by William           #+#    #+#             */
-/*   Updated: 2024/11/23 13:49:37 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/07 16:11:07 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,3 @@ void	reverse_rotate_both(t_stack *a, t_stack *b)
 	reverse_rotate(a, 0);
 	reverse_rotate(b, 0);
 }
-
-/* void	push_both(t_stack *a, t_stack *b) */
-/* { */
-/* 	t_node	*top_a; */
-/* 	t_node	*top_b; */
-/* 	int		temp; */
-
-/* 	print_move("pp", 0); */
-/* 	if (a->top == NULL || b->top == NULL) */
-/* 		return; */
-/* 	top_a = a->top; */
-/* 	top_b = b->top; */
-/* 	temp = top_a->n; */
-/* 	top_a->n = top_b->n; */
-/* 	top_b->n = temp; */
-/* } */

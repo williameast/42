@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2025/01/07 14:12:30 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/07 18:46:08 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -37,9 +37,26 @@
 #define	SIN30 0.5
 #define	CLAMP 0
 
+// KEYS
+
+#define KEY_W 119 // up
+#define KEY_A 97  // left
+#define KEY_S 115 // down
+#define KEY_D 100 // right
+#define KEY_R 114 // reset
+#define KEY_I 105 // zoom In
+#define KEY_O 111 // zoom Out
+#define KEY_J 106 // rotate left
+#define KEY_L 108 // rotate right
+#define KEY_ESC 56307 // exit
+
+
+
+
+
 
 // drawing objects:
-// point. contains both its absolute coords in the matrix read in as well as the
+// point contains both its absolute coords in the matrix read in as well as the
 // points for rendering to the screen. grid_x and grid_y never change.
 // visible is a switch that tells you if a point is to be plotted or not.
 typedef struct s_crd {
@@ -66,6 +83,16 @@ typedef struct s_line {
 }			t_line;
 
 
+// rendering offset object. how much should each item be affected?
+typedef struct s_offset {
+	t_crd		value;
+	int			scale;
+	int			z_scale;
+	double		u;
+	double		v;
+	int			state;
+}			t_offset;
+
 // map object. list of points, and metadata.
 typedef struct s_map {
     t_crd	*points;
@@ -87,8 +114,8 @@ typedef struct s_image {
 
 // a session control instance. this is used to manage windows.
 typedef struct s_ctrl {
-	/* double			scale; */
-	/* double			z_scale; */
+	t_offset		offset;
+	t_offset		origin;
 	void			*mlx_ptr;
 	void			*win_ptr;
 	t_map			*map;
@@ -98,17 +125,15 @@ typedef struct s_ctrl {
 
 
 
-
 /* declarations */
 /* Declarations from affine.c */
-void	flatten3d_to_2d(t_crd point, double z_rotation);
-void	scale(t_crd *point, int x_scalar, int y_scalar, int z_scalar);
-void	translate(t_crd *point, int x_scalar, int y_scalar, int z_scalar);
+void	scale(t_crd *point, t_offset offset);
+void	translate(t_crd *point, t_offset offset);
 void	flatten_isometrically(t_crd *point);
 
 /* Declarations from controls.c */
 void exit_program(t_ctrl *session);
-int key_hook(int keycode, t_ctrl *ctrl);
+int key_hook(int keycode, t_ctrl *ctrl, t_offset offset);
 int close_window(t_ctrl *ctrl);
 
 /* Declarations from draw.c */
@@ -118,6 +143,9 @@ void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
 /* Declarations from init.c */
 t_crd	handle_out_of_bounds_line(t_crd point);
 t_line	init_line(t_crd src, t_crd dest, int colour);
+t_offset	init_offset(t_crd point, double u, double v);
+t_ctrl set_state_to_origin(t_ctrl *session);
+t_ctrl init_session(void);
 
 /* Declarations from input.c */
 
@@ -130,7 +158,6 @@ int	is_pixel_out_of_bounds(t_crd p);
 /* Declarations from main.c */
 void connect_visible_neighbors(t_image image, t_map *map, int color);
 int render_loop(t_ctrl *session);
-t_ctrl init_session(void);
 void	clear_screen(t_ctrl *session, int colour);
 int main(int argc, char *argv[]);
 

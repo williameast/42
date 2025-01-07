@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:19:40 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 19:21:06 by William          ###   ########.fr       */
+/*   Updated: 2025/01/07 18:40:35 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,16 @@
 /* ************************************************************************** */
 
 
-void	flatten3d_to_2d(t_crd point, double z_rotation);
-
-
-void	scale(t_crd *point, int x_scalar, int y_scalar, int z_scalar)
+void	scale(t_crd *point, t_offset offset)
 {
-	point->x *= x_scalar;
-	point->y *= y_scalar;
-	point->z *= z_scalar;
+	point->x *= offset.scale;
+	point->y *= offset.scale;
+	point->z *= offset.scale;
 }
-
-void	translate(t_crd *point, int x_scalar, int y_scalar, int z_scalar)
+void	translate(t_crd *point, t_offset offset)
 {
-	point->x += x_scalar;
-	point->y += y_scalar;
-	point->z += z_scalar;
-
-
+	point->x += offset.value.x;
+	point->y += offset.value.y;
 }
 
 void	flatten_isometrically(t_crd *point)
