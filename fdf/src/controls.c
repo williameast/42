@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 18:07:36 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/10 20:17:28 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,27 @@ void exit_program(t_ctrl *session)
 
 
 // Key event handler
-int key_hook(int keycode, t_ctrl *ctrl, t_offset offset)
+int key_hook(int keycode, t_ctrl *ctrl)
 {
+    printf("%i\n", keycode);
     if (keycode == KEY_ESC)
         exit_program(ctrl);
-    if (keycode == KEY_R)
-
-
-    if (keycode == KEY_A)
-        offset.x -= 1; // move left
     if (keycode == KEY_D)
-        offset.x += 1; // move right
-    if (keycode == KEY_W)
-        offset.y -= 1; // move up
+        translate(ctrl, 5, 0);
+    if (keycode == KEY_A)
+        translate(ctrl, -5, 0);
     if (keycode == KEY_S)
-        offset.y += 1; // move down
-    if (keycode == KEY_J)
-        offset.u += 1; // rotate clockwise?
-    if (keycode == KEY_L)
-        offset.v += 1; // rotate counterclockwise?
+        translate(ctrl, 0, 5);
+    if (keycode == KEY_W)
+        translate(ctrl, 0, -5);
+    if (keycode == KEY_I)
+        scale(ctrl, 1);
+    if (keycode == KEY_O)
+        scale(ctrl, -1);
+    /* if (keycode == KEY_J) */
+    /*     offset.u += 1; // rotate clockwise? */
+    /* if (keycode == KEY_L) */
+    /*     offset.v += 1; // rotate counterclockwise? */
 
 
     return (0);

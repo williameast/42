@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:19:40 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 18:40:35 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/10 20:06:55 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,21 @@
 /* ************************************************************************** */
 
 
-void	scale(t_crd *point, t_offset offset)
+void	translate(t_ctrl *session, int dx, int dy)
 {
-	point->x *= offset.scale;
-	point->y *= offset.scale;
-	point->z *= offset.scale;
-}
-void	translate(t_crd *point, t_offset offset)
-{
-	point->x += offset.value.x;
-	point->y += offset.value.y;
+    session->offset.x_offset += dx;
+    session->offset.y_offset += dy;
+    session->draw_complete = 0;
 }
 
+void	scale(t_ctrl *session, int factor)
+{
+    if (session->offset.scale + factor > 0)
+    {
+        session->offset.scale += factor;
+        session->draw_complete = 0;
+    }
+}
 void	flatten_isometrically(t_crd *point)
 {
 	int	x;
@@ -44,39 +47,38 @@ void	flatten_isometrically(t_crd *point)
 
 }
 
+void	apply_offset(t_ctrl *sesh)
+{
+	int	i;
+	int	s;
 
-/* static void	rotate_x(t_crd point, double sin_rotation, double cos_rotation); */
-/* { */
-/* 	int	new_y; */
-/* 	int new_z; */
+	i = 0;
+	s = sesh->offset.scale;
+	while (i < sesh->map->points_len)
+	{
+		sesh->map->points[i].x = sesh->map->points[i].grid_x * s + sesh->offset.x_offset;
+		sesh->map->points[i].y = sesh->map->points[i].grid_y * s + sesh->offset.y_offset;
+		sesh->map->points[i].z = sesh->map->points[i].grid_z * sesh->offset.z_scale;
+		if (sesh->is_isometric)
+			flatten_isometrically(&sesh->map->points[i]);
+		i++;
+	}
+	sesh->draw_complete = 1;
+}
 
-/* 	new_y = point.y * cos_rotation + point.z * sin_rotation; */
-/* 	new_z = -point.y * sin_rotation + point.z * cos_rotation; */
-/* 	point.y = new_y; */
-/* 	point.z = new_z; */
-/* } */
+void	reset_session(t_ctrl *session)
+{
+	int	i;
 
-/* static void	rotate_y(t_crd point, double sin_rotation, double cos_rotation); */
-/* { */
-/* 	int	new_x; */
-/* 	int new_z; */
+	i = 0;
+	while (i < session->map->points_len)
+	{
+		session->map->points[i].x = session->map->points[i].grid_x;
+		session->map->points[i].y = session->map->points[i].grid_y;
+		session->map->points[i].z = session->map->points[i].grid_z;
+		i++;
+	}
+	session->offset = session->origin;
+	ft_printf("INFO: resetting to original state.\n");
+}
 
-/* 	new_x = point.x * cos_rotation + point.z * sin_rotation; */
-/* 	new_z = -point.x * sin_rotation + point.z * cos_rotation; */
-/* 	point.x = new_x; */
-/* 	point.z = new_z; */
-/* } */
-
-
-/* void	convert_iso(t_crd point, double cos_iso, double sin_iso) */
-/* { */
-/* 	int	x; */
-/* 	int y; */
-
-/* 	x = (point.x - point.y) * cos_iso; */
-/* 	y = -point.z + (x + point.y)  * sin_iso; */
-
-/* 	point.x = x; */
-/* 	point.y = y; */
-
-/* } */

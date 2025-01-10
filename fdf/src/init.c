@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 18:51:16 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/10 20:07:34 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,38 +55,27 @@ t_line	init_line(t_crd src, t_crd dest, int colour)
     return (line);
 }
 
-t_offset	init_offset(t_crd point, double u, double v)
+void	new_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar)
 {
-    t_offset	offset;
-
-    offset.value = point;
-    offset.scale = 1;
-    offset.u = u;
-    offset.v = v;
-    return (offset);
+    session->offset.x_offset = x;
+    session->offset.y_offset = y;
+    session->offset.scale = scalar;
+    session->offset.z_scale = z_scalar;
+    session->offset.u = 0.0;
+    session->offset.v = 0.0;
+    session->draw_complete = 0;
 }
 
-t_ctrl set_state_to_origin(t_ctrl *session)
-{
-    int	i;
-    t_crd *point;
-
-    i = 0;
-
-    while (i < session->map->points_len)
-    {
-        point = &session->map->points[i];
-        translate(point, session->offset);
-        scale(point, session->offset);
-        flatten_isometrically(point);
-        translate(point, WIN_WIDTH / 2, WIN_HEIGHT / 2, 0);
-
-    }
+/* void	zoom(t_ctrl *session, double zoom_factor) */
+/* { */
+/*     if (session->offset.scale * zoom_factor > 0) // Prevent non-positive scale */
+/*     { */
+/*         session->offset.scale *= zoom_factor; */
+/*         session->draw_complete = 0; // Trigger a redraw */
+/*     } */
+/* } */
 
 
-
-
-}
 
 t_ctrl init_session(void)
 {
@@ -109,6 +98,13 @@ t_ctrl init_session(void)
                                            &session.image.bits_per_pixel,
                                            &session.image.line_length,
                                            &session.image.endian);
-	session.draw_complete = 0;
+    session.is_isometric = 1;
+    new_offset(&session, -5 , -5, 5, 10);
+    translate(&session, WIN_WIDTH / 2, WIN_HEIGHT / 2);
+
+
+    // center!
+    /* new_offset(&session,  WIN_WIDTH / 2 , WIN_HEIGHT /2 , 1 , 1); */
+
     return session;
 }

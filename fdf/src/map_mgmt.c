@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/05 20:46:22 by William          ###   ########.fr       */
+/*   Updated: 2025/01/10 15:34:07 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_crd populate_coordinate(int x, int y, char *z)
     if (z[0] != '\0')
     {
         out.z = ft_atoi(z);
+        out.grid_z = out.z;
         if (out.z == 0 && z[0] != '0')
         {
             out.visible = -1;

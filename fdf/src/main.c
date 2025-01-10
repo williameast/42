@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 18:43:22 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/10 20:12:39 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,53 +41,27 @@ void connect_visible_neighbors(t_image image, t_map *map, int color)
     }
 }
 
+
 int render_loop(t_ctrl *session)
 {
-	if (session->draw_complete == 0)
+	if (!session->draw_complete)
     {
+		clear_image(session, WIN_WIDTH, WIN_HEIGHT);
+		apply_offset(session);
 		connect_visible_neighbors(session->image, session->map, GREEN); // Replace GREEN with the desired line color
 		mlx_put_image_to_window(session->mlx_ptr, session->win_ptr, session->image.img_ptr, 0, 0);
 		session->draw_complete = 1;
+		ft_printf("INFO: render cycle complete.\n");
 	}
     return 0;
-
 }
-
-
-
-
-void	clear_screen(t_ctrl *session, int colour)
-{
-	int	x;
-	int y;
-
-	x = 0;
-	y = 0;
-    while (y < WIN_HEIGHT)
-	{
-		while (x < WIN_WIDTH)
-		{
-			t_crd temp = {x, y, 0, 1, 0, 0};
-			draw_pixel(session->image, temp , colour);
-			x++;
-		}
-		y++;
-	}
-	ft_printf("INFO: Screen cleared\n");
-}
-
-
-
 
 
 int main(int argc, char *argv[])
 {
     t_ctrl session;
-	t_crd	*point;
 	t_map	*map;
-	int	i;
 
-	i = 0;
     session = init_session();
     if (argc != 2)
 	{
@@ -96,20 +70,6 @@ int main(int argc, char *argv[])
     }
 	map = parse_map(argv[1]);
 	session.map = map;
-    // this is where the scaling happens
-	while (i < session.map->points_len)
-	{
-		point = &session.map->points[i];
-		translate(point, -5, -5, 0);
-		scale(point, 30, 30, 30);
-		flatten_isometrically(point);
-		translate(point, WIN_WIDTH/2, WIN_HEIGHT/2, 0);
-		i++;
-
-		if (point->x < 0 || point->x >= WIN_WIDTH ||
-			point->y < 0 || point->y >= WIN_HEIGHT)
-				ft_printf("INFO: Point out of bounds: x=%d, y=%d\n", point->x, point->y);
-	}
 	print_map_struct(map);
     mlx_loop_hook(session.mlx_ptr, render_loop, &session);
     mlx_key_hook(session.win_ptr, key_hook, &session);
