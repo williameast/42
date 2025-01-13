@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/10 20:07:34 by William          ###   ########.fr       */
+/*   Updated: 2025/01/13 00:56:33 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_crd	handle_out_of_bounds_line(t_crd point)
     return (out);
 }
 
+
 t_line	init_line(t_crd src, t_crd dest, int colour)
 {
     t_line	line;
@@ -55,7 +56,26 @@ t_line	init_line(t_crd src, t_crd dest, int colour)
     return (line);
 }
 
-void	new_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar)
+t_map *init_map()
+{
+	ft_printf("INFO: initializing map...\n");
+    t_map *map = malloc(sizeof(t_map));
+    if (!map)
+        return NULL;
+    map->points = NULL;
+    map->points_len = 0;
+    map->rows = 0;
+    map->cols = 0;
+    map->x_min = INT_MAX;
+    map->x_max = INT_MIN;
+    map->y_min = INT_MAX;
+    map->y_max = INT_MIN;
+    map->z_min = INT_MAX;
+    map->z_max = INT_MIN;
+	ft_printf("INFO: initialized map.\n");
+    return map;
+}
+void	init_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar)
 {
     session->offset.x_offset = x;
     session->offset.y_offset = y;
@@ -65,6 +85,7 @@ void	new_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar)
     session->offset.v = 0.0;
     session->draw_complete = 0;
 }
+
 
 /* void	zoom(t_ctrl *session, double zoom_factor) */
 /* { */
@@ -99,12 +120,9 @@ t_ctrl init_session(void)
                                            &session.image.line_length,
                                            &session.image.endian);
     session.is_isometric = 1;
-    new_offset(&session, -5 , -5, 5, 10);
-    translate(&session, WIN_WIDTH / 2, WIN_HEIGHT / 2);
-
-
-    // center!
-    /* new_offset(&session,  WIN_WIDTH / 2 , WIN_HEIGHT /2 , 1 , 1); */
-
-    return session;
+    init_offset(&session, -5 , -5, 5, 10);
+    center_image(&session);
+    /* translate(&session, WIN_WIDTH / 2, WIN_HEIGHT / 2); */
+    session.origin = session.offset;
+    return (session);
 }

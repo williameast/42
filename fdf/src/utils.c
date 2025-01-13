@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 11:07:12 by William           #+#    #+#             */
-/*   Updated: 2025/01/07 13:58:04 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/12 15:37:39 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,104 +66,4 @@ void *ft_realloc(void *ptr, size_t old_size, size_t new_size)
     free(ptr);
     return (new_ptr);
 }
-static int	count_words(const char *str, char delimiter)
-{
-	size_t	i = 0;
-	size_t	wordcount = 0;
-	size_t delimiter_count;
 
-	if (!str)
-		return (0);
-
-	while (str[i] != '\0')
-	{
-		if (str[i] != delimiter)
-		{
-			wordcount++;
-			while (str[i] != '\0' && str[i] != delimiter)
-				i++;
-		}
-		else
-		{
-			delimiter_count = 0;
-			while (str[i] == delimiter)
-			{
-				delimiter_count++;
-				i++;
-			}
-			wordcount += (delimiter_count + 2) / 3;
-		}
-	}
-	return (wordcount);
-}
-static int	get_word_length(const char *s, unsigned int start, char c)
-{
-	int	i;
-
-	i = start;
-	while (s[i] != '\0' && s[i] != c)
-		i++;
-	return (i - start);
-}
-
-static char **free_layered(char **arr, int j)
-{
-    while (j > 0)
-        free(arr[--j]);
-    free(arr);
-    return (NULL);
-}
-
-char **ft_split_strict(const char *s, char c)
-{
-    char    **arr;
-    size_t  i = 0;
-    int     j = 0;
-
-    // Allocate memory for the array of strings
-    arr = (char **)malloc((count_words(s, c) + 1) * sizeof(char *));
-    if (!arr)
-        return (NULL);
-
-    while (s[i] != '\0')
-    {
-        // Handle words (non-delimiter characters)
-        if (s[i] != c)
-        {
-            arr[j++] = ft_substr(s, i, get_word_length(s, i, c));
-            if (!arr[j - 1])
-                return (free_layered(arr, j - 1)); // Return NULL on failure
-            i += get_word_length(s, i, c);
-        }
-        // Handle groups of delimiters (3 or more consecutive)
-        else
-        {
-            size_t delimiter_count = 0;
-            while (s[i] == c)
-            {
-                delimiter_count++;
-                i++;
-            }
-            if (delimiter_count >= 3)
-            {
-                size_t empty_count = (delimiter_count + 2 ) / 3; // Number of empty strings to create
-                for (size_t k = 0; k < empty_count; k++)
-                {
-                    arr[j++] = ft_strdup(""); // Allocate empty string
-                    if (!arr[j - 1])
-                        return (free_layered(arr, j - 1)); // Return NULL on failure
-                }
-            }
-        }
-    }
-    arr[j] = NULL; // Null-terminate the array
-    return (arr);
-}
-
-int inline_ternary(int	a, int b, int c)
-{
-    if (a)
-        return (b);
-    else
-        return (c);
-}

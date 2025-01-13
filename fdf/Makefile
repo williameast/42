@@ -1,6 +1,6 @@
 ### COMPILATION ###
 CC      = cc
-FLAGS   = -Wall -Wextra -Werror
+FLAGS   = -Wall -Wextra -Werror -g
 
 ### DIRECTORIES ###
 SRC_DIR     = src
@@ -30,10 +30,12 @@ SRC_FILES   = \
 				map_mgmt.c \
 				init.c \
 				draw.c \
-				input.c \
 				affine.c \
 				maffs.c \
 				controls.c \
+				cleanup.c \
+				render.c \
+				parsing.c \
 
 ### HEADERS ###
 HEADERS     =  \

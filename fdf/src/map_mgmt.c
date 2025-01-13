@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/10 15:34:07 by William          ###   ########.fr       */
+/*   Updated: 2025/01/12 18:29:41 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static t_crd *parse_row_to_coordinates(char *row, int y, int *count)
 
     if (!row || !count)
         return (NULL);
-    split = ft_split_strict(row, ' ');
+    split = ft_split(row, ' ');
     if (!split)
         return (NULL);
     *count = 0;
@@ -112,18 +112,14 @@ t_map *initialize_map()
     map->points_len = 0;
     map->rows = 0;
     map->cols = 0;
-    map->z_max = 0;
-    map->z_min = 0;
+    map->x_max = INT_MIN;
+    map->x_min = INT_MAX;
+    map->y_max = INT_MIN;
+    map->y_min = INT_MAX;
+    map->z_max = INT_MIN;
+    map->z_min = INT_MAX;
 	ft_printf("INFO: initialized map.\n");
     return map;
-}
-
-void	free_map(t_map *map)
-{
-	ft_printf("INFO: freeing map...\n");
-	free(map->points);
-	free(map);
-	ft_printf("INFO: map has been freed.\n");
 }
 
 static int append_row_to_map(t_map *map, t_crd *row_coords, int row_length)
@@ -148,7 +144,8 @@ static char **read_and_split_map(char *filename)
 {
     char *map_str = read_full_map_as_str(filename);
 
-    ft_printf("INFO: map string: \n%s\n", map_str);
+    if (DEBUG)
+        ft_printf("INFO: map string: \n%s\n", map_str);
     if (!map_str)
         return NULL;
     char **row_split = ft_split(map_str, '\n');
@@ -198,5 +195,6 @@ t_map *parse_map(char *filename)
         }
     }
     free_char_array(row_split);
+    get_coordinate_limits(map);
     return map;
 }

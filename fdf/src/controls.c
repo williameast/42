@@ -6,13 +6,13 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/10 20:17:28 by William          ###   ########.fr       */
+/*   Updated: 2025/01/12 14:52:57 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-void exit_program(t_ctrl *session)
+void	exit_program(t_ctrl *session)
 {
     ft_printf("INFO: exiting program and removing resources....\n");
     if (session->mlx_ptr && session->win_ptr)
@@ -39,12 +39,17 @@ void exit_program(t_ctrl *session)
 }
 
 
+// Window close event handler
+int close_window(t_ctrl *ctrl)
+{
+    exit_program(ctrl);
+    return (0);
+}
 
 
 // Key event handler
 int key_hook(int keycode, t_ctrl *ctrl)
 {
-    printf("%i\n", keycode);
     if (keycode == KEY_ESC)
         exit_program(ctrl);
     if (keycode == KEY_D)
@@ -59,18 +64,14 @@ int key_hook(int keycode, t_ctrl *ctrl)
         scale(ctrl, 1);
     if (keycode == KEY_O)
         scale(ctrl, -1);
-    /* if (keycode == KEY_J) */
-    /*     offset.u += 1; // rotate clockwise? */
+    if (keycode == KEY_R)
+        reset_session(ctrl);
+    if (keycode == KEY_J)
+        rotate(ctrl,  M_PI / 4); // rotate clockwise?
     /* if (keycode == KEY_L) */
     /*     offset.v += 1; // rotate counterclockwise? */
 
 
     return (0);
 
-}
-// Window close event handler
-int close_window(t_ctrl *ctrl)
-{
-    exit_program(ctrl);
-    return (0);
 }

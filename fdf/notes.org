@@ -9,3 +9,10 @@
 * [ ] draw lines
 * [ ] make 3D
 * [ ] make things move
+* [ ] final changes
+** [ ] Norm compliance
+** [ ] remove dead useless functions
+** [ ] maybe add to my libft??
+** [ ] handle empty lines
+** [ ] handle uneven files
+** [ ] build centering function

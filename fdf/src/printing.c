@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2024/12/15 21:39:41 by William          ###   ########.fr       */
+/*   Updated: 2025/01/12 19:40:09 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,25 +69,7 @@ void	print_coordinates(t_crd *crd, int count)
 	}
 }
 
-/* void print_map(t_map *map) */
-/* { */
-/*     if (!map || !map->points || map->rows <= 0 || map->cols <= 0) */
-/*     { */
-/*         ft_printf("Invalid map data.\n"); */
-/*         return; */
-/*     } */
-
-/*     for (int i = 0; i < map->rows; i++) */
-/*     { */
-/*         for (int j = 0; j < map->cols; j++) */
-/*         { */
-/*             int index = i * map->cols + j; */
-/* 			if (map->points[index].visible) */
-/*             ft_printf("%d ", map->points[index].z); */
-/* 			else */
-/*             ft_printf("  "); */
-
-/*         } */
-/*         ft_printf("\n"); */
-/*     } */
-/* } */
+void	print_offset(t_offset o)
+{
+	ft_printf("INFO: offset: x: %i, y: %i, scale %i \n", o.x_offset, o.y_offset, o.scale);
+}

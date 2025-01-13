@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 23:14:30 by William           #+#    #+#             */
-/*   Updated: 2025/01/10 20:12:10 by William          ###   ########.fr       */
+/*   Updated: 2025/01/12 16:36:47 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 
 
-void draw_pixel(t_image image, t_crd point, int color)
+void	draw_pixel(t_image image, t_crd point, int color)
 {
     char *pixel;
     if (!is_pixel_out_of_bounds(point))
@@ -22,7 +22,7 @@ void draw_pixel(t_image image, t_crd point, int color)
         pixel = image.addr + (point.y * image.line_length + point.x * (image.bits_per_pixel / 8));
         *(int *)pixel = color;
     }
-    else
+    else if (DEBUG)
         ft_printf("INFO: pixel (%i, %i) out of bounds. skipping...\n", point.x, point.y);
 }
 
@@ -32,6 +32,8 @@ void	draw_line(t_image image, t_crd src, t_crd dest, int colour)
     int	e2;
     t_line	line;
 
+    if (is_pixel_out_of_bounds(src) && is_pixel_out_of_bounds(dest))
+        return ;
     line = init_line(src, dest, colour);
     while (1)
     {
@@ -52,18 +54,15 @@ void	draw_line(t_image image, t_crd src, t_crd dest, int colour)
     }
 }
 
-void clear_image(t_ctrl *session, int width, int height)
+void	clear_image(t_ctrl *session, int width, int height)
 {
-    // Destroy the old image to free memory
     if (session->image.img_ptr)
         mlx_destroy_image(session->mlx_ptr, session->image.img_ptr);
-
-    // Create a new blank image
     session->image.img_ptr = mlx_new_image(session->mlx_ptr, width, height);
     session->image.addr = mlx_get_data_addr(session->image.img_ptr,
                                             &session->image.bits_per_pixel,
                                             &session->image.line_length,
                                             &session->image.endian);
-
-    ft_printf("INFO: Image cleared and reinitialized.\n");
+    if (DEBUG)
+        ft_printf("INFO: Image cleared and reinitialized.\n");
 }
