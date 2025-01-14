@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 13:34:41 by William           #+#    #+#             */
-/*   Updated: 2025/01/13 00:59:07 by William          ###   ########.fr       */
+/*   Updated: 2025/01/14 19:09:39 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,10 @@ void	get_coordinate_limits(t_map *map)
             map->z_max = coordinate.z;
         i++;
     }
+}
+
+int	get_colour_gradient(int dz)
+{
+    return(BLUE);
+    (void) (dz);
 }

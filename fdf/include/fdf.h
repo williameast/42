@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2025/01/14 17:40:31 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/14 18:56:24 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -48,7 +48,7 @@
 #define KEY_I 105 // zoom In
 #define KEY_O 111 // zoom Out
 #define KEY_J 106 // rotate left
-#define KEY_L 108 // rotate right
+#define KEY_K 107 // rotate right
 #define KEY_SPC 32 // cycle cabinet
 #define KEY_ESC 65307 // exit
 
@@ -78,10 +78,10 @@ typedef struct s_line {
 	t_crd	dest;
 	int		dx;
 	int		dy;
+	int		dz;
 	int		step_x;
 	int		step_y;
 	int		error;
-	int		colour;
 	int		visible;
 }			t_line;
 
@@ -91,7 +91,7 @@ typedef struct s_offset {
 	int			x_offset;
 	int			y_offset;
 	int			scale;
-	int			z_scale;
+	double			z_scale;
 	double		rotation;
 	int		rotation_changed;
 	int			state;
@@ -156,14 +156,14 @@ int key_hook(int keycode, t_ctrl *ctrl);
 
 /* Declarations from draw.c */
 void	draw_pixel(t_image image, t_crd point, int color);
-void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
+void	draw_line(t_image image, t_crd src, t_crd dest, int dz);
 void	clear_image(t_ctrl *session, int width, int height);
 
 /* Declarations from init.c */
 t_crd	handle_out_of_bounds_line(t_crd point);
-t_line	init_line(t_crd src, t_crd dest, int colour);
+t_line	init_line(t_crd src, t_crd dest, int dz);
 t_map *init_map();
-void	init_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar);
+void	init_offset(t_ctrl *session, int x, int y, double z_scalar, int scalar);
 t_ctrl init_session(t_map *map);
 
 /* Declarations from maffs.c */
@@ -172,6 +172,7 @@ int	pos_or_neg(int a, int b);
 int ternary(int a, int b, int c);
 int	is_pixel_out_of_bounds(t_crd p);
 void	get_coordinate_limits(t_map *map);
+int	get_colour_gradient(int dz);
 
 /* Declarations from main.c */
 int main(int argc, char *argv[]);
@@ -193,6 +194,7 @@ void	print_offset(t_offset o);
 
 /* Declarations from render.c */
 void	center_image(t_ctrl *session);
+int	colour_gradient_map(int z);
 int render_loop(t_ctrl *session);
 
 /* Declarations from utils.c */

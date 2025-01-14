@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/14 17:57:49 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/14 18:56:56 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_crd	handle_out_of_bounds_line(t_crd point)
 }
 
 
-t_line	init_line(t_crd src, t_crd dest, int colour)
+t_line	init_line(t_crd src, t_crd dest, int dz)
 {
     t_line	line;
 
@@ -51,7 +51,7 @@ t_line	init_line(t_crd src, t_crd dest, int colour)
     line.step_x = ternary(line.src.x < line.dest.x, 1, -1);
     line.step_y = ternary(line.src.y < line.dest.y, 1, -1);
     line.error = line.dx - line.dy;
-    line.colour = colour;
+    line.dz = dz;
     line.visible = 1;
     return (line);
 }
@@ -76,7 +76,7 @@ t_map *init_map()
     return map;
 }
 
-void	init_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar)
+void	init_offset(t_ctrl *session, int x, int y, double z_scalar, int scalar)
 {
     session->offset.x_offset = x;
     session->offset.y_offset = y;
@@ -111,7 +111,7 @@ t_ctrl init_session(t_map *map)
                                            &session.image.line_length,
                                            &session.image.endian);
     session.is_isometric = 1;
-    init_offset(&session, 0 , 0 , 1, 1);
+    init_offset(&session, 0 , 0 , 0.1, 1);
     session.map = map;
     center_image(&session);
     session.origin = session.offset;

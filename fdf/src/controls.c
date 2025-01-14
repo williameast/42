@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/14 17:54:37 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/14 18:08:49 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	wrap_angle(int angle)
 // Key event handler
 int key_hook(int keycode, t_ctrl *ctrl)
 {
-    /* ft_printf("INFO: keycode %i detected\n", keycode); */
+    ft_printf("INFO: keycode %i detected\n", keycode);
     if (keycode == KEY_ESC)
         exit_program(ctrl);
     if (keycode == KEY_D)
@@ -79,7 +79,12 @@ int key_hook(int keycode, t_ctrl *ctrl)
         ctrl->is_isometric = ternary(ctrl->is_isometric == 1, -1, 1);
     if (keycode == KEY_J)
     {
-        ctrl->offset.rotation = wrap_angle(15 + ctrl->offset.rotation);
+        ctrl->offset.rotation = wrap_angle(ctrl->offset.rotation + 1);
+        ctrl->offset.rotation_changed = 1;
+    }
+    if (keycode == KEY_K)
+    {
+        ctrl->offset.rotation = wrap_angle(ctrl->offset.rotation - 1);
         ctrl->offset.rotation_changed = 1;
     }
     if (keycode)
