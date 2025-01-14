@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 12:07:27 by William           #+#    #+#             */
-/*   Updated: 2025/01/12 14:52:57 by William          ###   ########.fr       */
+/*   Updated: 2025/01/14 17:54:37 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,32 +46,44 @@ int close_window(t_ctrl *ctrl)
     return (0);
 }
 
+int	wrap_angle(int angle)
+{
+	angle = angle  % 360;
+	if (angle < 0)
+		angle += 360;
+	return angle;
+}
+
 
 // Key event handler
 int key_hook(int keycode, t_ctrl *ctrl)
 {
+    /* ft_printf("INFO: keycode %i detected\n", keycode); */
     if (keycode == KEY_ESC)
         exit_program(ctrl);
     if (keycode == KEY_D)
-        translate(ctrl, 5, 0);
+        translate(ctrl, (ctrl->offset.scale), 0);
     if (keycode == KEY_A)
-        translate(ctrl, -5, 0);
+        translate(ctrl, -(ctrl->offset.scale), 0);
     if (keycode == KEY_S)
-        translate(ctrl, 0, 5);
+        translate(ctrl, 0, ctrl->offset.scale);
     if (keycode == KEY_W)
-        translate(ctrl, 0, -5);
+        translate(ctrl, 0, -(ctrl->offset.scale));
     if (keycode == KEY_I)
         scale(ctrl, 1);
     if (keycode == KEY_O)
         scale(ctrl, -1);
     if (keycode == KEY_R)
         reset_session(ctrl);
+    if (keycode == KEY_SPC)
+        ctrl->is_isometric = ternary(ctrl->is_isometric == 1, -1, 1);
     if (keycode == KEY_J)
-        rotate(ctrl,  M_PI / 4); // rotate clockwise?
-    /* if (keycode == KEY_L) */
-    /*     offset.v += 1; // rotate counterclockwise? */
-
-
+    {
+        ctrl->offset.rotation = wrap_angle(15 + ctrl->offset.rotation);
+        ctrl->offset.rotation_changed = 1;
+    }
+    if (keycode)
+        ctrl->draw_complete = 0;
     return (0);
 
 }

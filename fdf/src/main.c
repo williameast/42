@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/12 18:30:09 by William          ###   ########.fr       */
+/*   Updated: 2025/01/14 16:16:52 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 	map = parse_map(argv[1]);
     if (!map)
         return(ft_printf("ERROR: Error loading map.\n"));
-    session = init_session();
-	session.map = map;
+    session = init_session(map);
+	center_image(&session);
 	if (DEBUG)
 		print_map_struct(map);
 	if (RENDER)

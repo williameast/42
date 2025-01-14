@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2025/01/13 00:43:08 by William          ###   ########.fr       */
+/*   Updated: 2025/01/14 17:40:31 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -27,8 +27,8 @@
 # include <math.h>
 
 
-#define	WIN_WIDTH 1900
-#define 	WIN_HEIGHT 1070
+#define	WIN_WIDTH 1000
+#define 	WIN_HEIGHT 1000
 #define 	TITLE "Wire mesh render"
 
 #define	GREEN  0x00FF00
@@ -49,12 +49,13 @@
 #define KEY_O 111 // zoom Out
 #define KEY_J 106 // rotate left
 #define KEY_L 108 // rotate right
+#define KEY_SPC 32 // cycle cabinet
 #define KEY_ESC 65307 // exit
 
 
 // DEBUG SWITCHES
 #define RENDER 1 // 0 to supress mlx generation. for testing parser
-#define DEBUG 1 // print info when pixels are ignored or dropped.
+#define DEBUG 0 // print info when pixels are ignored or dropped.
 
 // drawing objects:
 // point contains both its absolute coords in the matrix read in as well as the
@@ -91,8 +92,8 @@ typedef struct s_offset {
 	int			y_offset;
 	int			scale;
 	int			z_scale;
-	double		u;
-	double		v;
+	double		rotation;
+	int		rotation_changed;
 	int			state;
 }			t_offset;
 
@@ -135,48 +136,35 @@ typedef struct s_ctrl {
 
 
 /* declarations */
-/* Declarations from controls.c */
-void	exit_program(t_ctrl *session);
-int close_window(t_ctrl *ctrl);
-int key_hook(int keycode, t_ctrl *ctrl);
-
-/* Declarations from parsing.c */
-
-/* Declarations from utils.c */
-int	check_extension(char *filename, char *ext);
-void	free_char_array(char **array);
-void	free_int_array(int *array);
-void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
+/* Declarations from affine.c */
+void	translate(t_ctrl *session, int dx, int dy);
+void	scale(t_ctrl *session, int factor);
+void	rotate(t_crd *point, double angle);
+void	flatten_isometrically(t_crd *point);
+void	flatten_cabinet(t_crd *point);
+void	apply_offset(t_ctrl *sesh);
 
 /* Declarations from cleanup.c */
 void	free_map(t_map *map);
 void	reset_session(t_ctrl *session);
+
+/* Declarations from controls.c */
+void	exit_program(t_ctrl *session);
+int close_window(t_ctrl *ctrl);
+int	wrap_angle(int angle);
+int key_hook(int keycode, t_ctrl *ctrl);
+
+/* Declarations from draw.c */
+void	draw_pixel(t_image image, t_crd point, int color);
+void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
+void	clear_image(t_ctrl *session, int width, int height);
 
 /* Declarations from init.c */
 t_crd	handle_out_of_bounds_line(t_crd point);
 t_line	init_line(t_crd src, t_crd dest, int colour);
 t_map *init_map();
 void	init_offset(t_ctrl *session, int x, int y, int z_scalar, int scalar);
-t_ctrl init_session(void);
-
-/* Declarations from render.c */
-void	center_image(t_ctrl *session);
-int render_loop(t_ctrl *session);
-
-/* Declarations from printing.c */
-void	print_char_array(char **arr);
-void	print_point(t_crd c);
-void	print_map_struct(t_map *map);
-void	print_coordinates(t_crd *crd, int count);
-void	print_offset(t_offset o);
-
-/* Declarations from main.c */
-int main(int argc, char *argv[]);
-
-/* Declarations from draw.c */
-void	draw_pixel(t_image image, t_crd point, int color);
-void	draw_line(t_image image, t_crd src, t_crd dest, int colour);
-void	clear_image(t_ctrl *session, int width, int height);
+t_ctrl init_session(t_map *map);
 
 /* Declarations from maffs.c */
 int	derivative_of(int a, int b);
@@ -185,18 +173,33 @@ int ternary(int a, int b, int c);
 int	is_pixel_out_of_bounds(t_crd p);
 void	get_coordinate_limits(t_map *map);
 
+/* Declarations from main.c */
+int main(int argc, char *argv[]);
+
 /* Declarations from map_mgmt.c */
 t_crd populate_coordinate(int x, int y, char *z);
 char *read_full_map_as_str(char *file);
 t_map *initialize_map();
 t_map *parse_map(char *filename);
 
-/* Declarations from affine.c */
-void	translate(t_ctrl *session, int dx, int dy);
-void	scale(t_ctrl *session, int factor);
-void rotate(t_ctrl *session, double angle);
-void	flatten_isometrically(t_crd *point);
-void	apply_offset(t_ctrl *sesh);
+/* Declarations from parsing.c */
+
+/* Declarations from printing.c */
+void	print_char_array(char **arr);
+void	print_point(t_crd c);
+void	print_map_struct(t_map *map);
+void	print_coordinates(t_crd *crd, int count);
+void	print_offset(t_offset o);
+
+/* Declarations from render.c */
+void	center_image(t_ctrl *session);
+int render_loop(t_ctrl *session);
+
+/* Declarations from utils.c */
+int	check_extension(char *filename, char *ext);
+void	free_char_array(char **array);
+void	free_int_array(int *array);
+void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
 /* declarations end */
 
