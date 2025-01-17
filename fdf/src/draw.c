@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 23:14:30 by William           #+#    #+#             */
-/*   Updated: 2025/01/14 19:02:11 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:47:52 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,17 @@ void	draw_pixel(t_image image, t_crd point, int color)
 }
 
 
-void	draw_line(t_image image, t_crd src, t_crd dest, int dz)
+void	draw_line(t_image image, t_crd src, t_crd dest, int z_min, int z_max)
 {
     int	e2;
     t_line	line;
 
     if (is_pixel_out_of_bounds(src) && is_pixel_out_of_bounds(dest))
         return ;
-    line = init_line(src, dest, dz);
+    line = init_line(src, dest);
     while (1)
     {
-        draw_pixel(image, line.src, get_colour_gradient(dz));
+        draw_pixel(image, line.src, get_colour_gradient(line.current_z, z_min, z_max));
         if (line.src.x == line.dest.x && line.src.y == line.dest.y)
             break;
         e2 = line.error * 2;
@@ -51,6 +51,7 @@ void	draw_line(t_image image, t_crd src, t_crd dest, int dz)
             line.error += line.dx;
             line.src.y += line.step_y;
         }
+        line.current_z += line.z_increment;
     }
 }
 

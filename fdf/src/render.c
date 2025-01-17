@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 12:41:17 by William           #+#    #+#             */
-/*   Updated: 2025/01/14 19:10:55 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/17 13:59:57 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void check_and_draw_right_neighbor(t_image image, t_map *map, t_crd curre
             map->points[j].grid_x == current.grid_x + 1)
         {
             if (map->points[j].visible)
-                draw_line(image, current, map->points[j],(map->z_max - map->z_min));
+                draw_line(image, current, map->points[j], map->z_min, map->z_max);
             break;
         }
 		j++;
@@ -42,7 +42,7 @@ static void check_and_draw_bottom_neighbor(t_image image, t_map *map, t_crd curr
             map->points[j].grid_y == current.grid_y + 1)
         {
             if (map->points[j].visible)
-                draw_line(image, current, map->points[j], (map->z_max - map->z_min));
+                draw_line(image, current, map->points[j], map->z_min, map->z_max);
             break;
         }
 		j++;

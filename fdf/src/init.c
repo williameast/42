@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/15 13:15:14 by William          ###   ########.fr       */
+/*   Updated: 2025/01/17 16:01:20 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_crd	handle_out_of_bounds_line(t_crd point)
 }
 
 
-t_line	init_line(t_crd src, t_crd dest, int dz)
+t_line	init_line(t_crd src, t_crd dest)
 {
     t_line	line;
 
@@ -51,8 +51,12 @@ t_line	init_line(t_crd src, t_crd dest, int dz)
     line.step_x = ternary(line.src.x < line.dest.x, 1, -1);
     line.step_y = ternary(line.src.y < line.dest.y, 1, -1);
     line.error = line.dx - line.dy;
-    line.dz = dz;
-    line.visible = 1;
+    /* total_steps = ternary((line.dx > line.dy), line.dx, line.dy); */
+   line.z_increment = (line.dx > line.dy)
+        ? (float)(dest.grid_z - src.grid_z) / line.dx
+        : (float)(dest.grid_z - src.grid_z) / line.dy;
+   line.current_z = src.grid_z;
+   line.visible = 1;
     return (line);
 }
 

@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 12:56:47 by weast             #+#    #+#             */
-/*   Updated: 2025/01/14 18:56:24 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/17 14:46:15 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef FDF_H
@@ -78,11 +78,12 @@ typedef struct s_line {
 	t_crd	dest;
 	int		dx;
 	int		dy;
-	int		dz;
 	int		step_x;
 	int		step_y;
 	int		error;
 	int		visible;
+	float	z_increment;
+	float	current_z;
 }			t_line;
 
 
@@ -136,54 +137,34 @@ typedef struct s_ctrl {
 
 
 /* declarations */
-/* Declarations from affine.c */
-void	translate(t_ctrl *session, int dx, int dy);
-void	scale(t_ctrl *session, int factor);
-void	rotate(t_crd *point, double angle);
-void	flatten_isometrically(t_crd *point);
-void	flatten_cabinet(t_crd *point);
-void	apply_offset(t_ctrl *sesh);
-
-/* Declarations from cleanup.c */
-void	free_map(t_map *map);
-void	reset_session(t_ctrl *session);
-
 /* Declarations from controls.c */
 void	exit_program(t_ctrl *session);
 int close_window(t_ctrl *ctrl);
 int	wrap_angle(int angle);
 int key_hook(int keycode, t_ctrl *ctrl);
 
-/* Declarations from draw.c */
-void	draw_pixel(t_image image, t_crd point, int color);
-void	draw_line(t_image image, t_crd src, t_crd dest, int dz);
-void	clear_image(t_ctrl *session, int width, int height);
+/* Declarations from parsing.c */
+
+/* Declarations from utils.c */
+int	check_extension(char *filename, char *ext);
+void	free_char_array(char **array);
+void	free_int_array(int *array);
+void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
+
+/* Declarations from cleanup.c */
+void	free_map(t_map *map);
+void	reset_session(t_ctrl *session);
 
 /* Declarations from init.c */
 t_crd	handle_out_of_bounds_line(t_crd point);
-t_line	init_line(t_crd src, t_crd dest, int dz);
+t_line	init_line(t_crd src, t_crd dest);
 t_map *init_map();
 void	init_offset(t_ctrl *session, int x, int y, double z_scalar, int scalar);
 t_ctrl init_session(t_map *map);
 
-/* Declarations from maffs.c */
-int	derivative_of(int a, int b);
-int	pos_or_neg(int a, int b);
-int ternary(int a, int b, int c);
-int	is_pixel_out_of_bounds(t_crd p);
-void	get_coordinate_limits(t_map *map);
-int	get_colour_gradient(int dz);
-
-/* Declarations from main.c */
-int main(int argc, char *argv[]);
-
-/* Declarations from map_mgmt.c */
-t_crd populate_coordinate(int x, int y, char *z);
-char *read_full_map_as_str(char *file);
-t_map *initialize_map();
-t_map *parse_map(char *filename);
-
-/* Declarations from parsing.c */
+/* Declarations from render.c */
+void	center_image(t_ctrl *session);
+int render_loop(t_ctrl *session);
 
 /* Declarations from printing.c */
 void	print_char_array(char **arr);
@@ -192,16 +173,35 @@ void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
 void	print_offset(t_offset o);
 
-/* Declarations from render.c */
-void	center_image(t_ctrl *session);
-int	colour_gradient_map(int z);
-int render_loop(t_ctrl *session);
+/* Declarations from main.c */
+int main(int argc, char *argv[]);
 
-/* Declarations from utils.c */
-int	check_extension(char *filename, char *ext);
-void	free_char_array(char **array);
-void	free_int_array(int *array);
-void *ft_realloc(void *ptr, size_t old_size, size_t new_size);
+/* Declarations from draw.c */
+void	draw_pixel(t_image image, t_crd point, int color);
+void	draw_line(t_image image, t_crd src, t_crd dest, int z_min, int z_max);
+void	clear_image(t_ctrl *session, int width, int height);
+
+/* Declarations from maffs.c */
+int	derivative_of(int a, int b);
+int	pos_or_neg(int a, int b);
+int ternary(int a, int b, int c);
+int	is_pixel_out_of_bounds(t_crd p);
+void	get_coordinate_limits(t_map *map);
+int get_colour_gradient(float z, int z_min, int z_max);
+
+/* Declarations from map_mgmt.c */
+t_crd populate_coordinate(int x, int y, char *z);
+char *read_full_map_as_str(char *file);
+t_map *initialize_map();
+t_map *parse_map(char *filename);
+
+/* Declarations from affine.c */
+void	translate(t_ctrl *session, int dx, int dy);
+void	scale(t_ctrl *session, int factor);
+void	rotate(t_crd *point, double angle);
+void	flatten_isometrically(t_crd *point);
+void	flatten_cabinet(t_crd *point);
+void	apply_offset(t_ctrl *sesh);
 
 /* declarations end */
 
