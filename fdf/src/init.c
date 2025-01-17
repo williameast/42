@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/14 18:56:56 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/15 13:15:14 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ t_ctrl init_session(t_map *map)
                                            &session.image.line_length,
                                            &session.image.endian);
     session.is_isometric = 1;
-    init_offset(&session, 0 , 0 , 0.1, 1);
+    init_offset(&session, 0 , 0 , 0.5, 1);
     session.map = map;
     center_image(&session);
     session.origin = session.offset;
