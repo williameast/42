@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 10:30:26 by weast             #+#    #+#             */
-/*   Updated: 2024/12/13 14:04:56 by William          ###   ########.fr       */
+/*   Updated: 2025/01/18 13:53:37 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@
 int	check_overflow(long res, int sign)
 {
 	if (sign == 1 && res > INT_MAX)
-		return 0;
-	else if (sign == -1 && -res < INT_MIN)
-		return 0;
+		return (0);
+	else if (sign == -1 && - res < INT_MIN)
+		return (0);
 	else
-		return 1;
+		return (1);
 }
 
 int	ft_atoi(const char *str)

@@ -6,12 +6,11 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/12 19:40:09 by William          ###   ########.fr       */
+/*   Updated: 2025/01/18 13:50:38 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
-
 
 void	print_char_array(char **arr)
 {
@@ -32,8 +31,8 @@ void	print_point(t_crd c)
 
 void	print_map_struct(t_map *map)
 {
-	t_crd t;
-	int	i;
+	t_crd	t;
+	int		i;
 
 	if (!map)
 	{
@@ -41,11 +40,14 @@ void	print_map_struct(t_map *map)
 		return ;
 	}
 	i = 0;
-	ft_printf("rows: %i, cols: %i, points_len: %i\n", map->rows, map->cols, map->points_len);
+	ft_printf("rows: %i, cols: %i, points_len: %i\n", map->rows,
+		map->cols,
+		map->points_len);
 	while (i < map->points_len)
 	{
 		t = map->points[i];
-		ft_printf("%i: x= %i, y= %i, z= %i, vis= %i\n", i, t.x, t.y, t.z, t.visible);
+		ft_printf("%i: x= %i, y= %i, z= %i, vis= %i\n", i,
+			t.x, t.y, t.z, t.visible);
 		i++;
 	}
 }
@@ -60,16 +62,10 @@ void	print_coordinates(t_crd *crd, int count)
 		ft_printf("ERROR: map object not found, nothing to print.\n");
 		return ;
 	}
-
 	while (i < count)
 	{
 		ft_printf("[%i]: ", i);
 		print_point(crd[i]);
 		i++;
 	}
-}
-
-void	print_offset(t_offset o)
-{
-	ft_printf("INFO: offset: x: %i, y: %i, scale %i \n", o.x_offset, o.y_offset, o.scale);
 }
