@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/18 11:38:01 by William          ###   ########.fr       */
+/*   Updated: 2025/01/20 12:46:43 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ void	init_offset(t_ctrl *session, int x, int y, double z_scalar)
 	session->offset.y_offset = y;
 	session->offset.scale = 1;
 	session->offset.z_scale = z_scalar;
-	session->offset.rotation = 0.0;
-	session->offset.rotation_changed = 0;
 	session->draw_complete = 0;
 }
 

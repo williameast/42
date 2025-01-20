@@ -6,7 +6,7 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 10:07:33 by William           #+#    #+#             */
-/*   Updated: 2025/01/18 13:55:55 by William          ###   ########.fr       */
+/*   Updated: 2025/01/20 12:46:32 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	apply_offset(t_ctrl *sesh)
 		i++;
 	}
 	sesh->draw_complete = 1;
-	offset.rotation_changed = 0;
 }
 
 static void	attach_mlx(t_ctrl *session)
