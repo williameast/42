@@ -6,13 +6,13 @@
 /*   By: William <weast@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 13:34:41 by William           #+#    #+#             */
-/*   Updated: 2025/01/18 12:00:26 by William          ###   ########.fr       */
+/*   Updated: 2025/01/18 13:57:58 by William          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 
-int ternary(int a, int b, int c)
+int	ternary(int a, int b, int c)
 {
 	if (a)
 		return (b);
@@ -22,13 +22,13 @@ int ternary(int a, int b, int c)
 
 int	is_pixel_out_of_bounds(t_crd p)
 {
-	return (p.x < 0 || p.y < 0 ||
-		p.x >= WIN_WIDTH || p.y >= WIN_HEIGHT);
+	return (p.x < 0 || p.y < 0
+		|| p.x >= WIN_WIDTH || p.y >= WIN_HEIGHT);
 }
 
 void	get_coordinate_limits(t_map *map)
 {
-	int	i;
+	int		i;
 	t_crd	coordinate;
 
 	i = 0;

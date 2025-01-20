@@ -36,6 +36,7 @@ SRC_FILES   = \
 				cleanup.c \
 				render.c \
 				parsing.c \
+				colours.c \
 
 ### HEADERS ###
 HEADERS     =  \
