@@ -146,24 +146,29 @@ typedef struct s_ctrl {
 
 
 /* declarations */
-/* Declarations from controls.c */
-void	exit_program(t_ctrl *session);
-int	close_window(t_ctrl *ctrl);
-int	key_hook(int keycode, t_ctrl *ctrl);
-
-/* Declarations from parsing.c */
-char **read_and_split_map(char *filename);
-t_map *parse_map(char *filename);
-
-/* Declarations from utils.c */
-int	check_extension(char *filename, char *ext);
-void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+/* Declarations from affine.c */
+void	translate(t_ctrl *session, int dx, int dy);
+void	scale(t_ctrl *session, int factor);
+void	flatten_isometrically(t_crd *point);
+void	flatten_cabinet(t_crd *point);
 
 /* Declarations from cleanup.c */
 void	free_char_array(char **array);
 void	free_int_array(int *array);
 void	free_map(t_map *map);
 void	reset_session(t_ctrl *session);
+
+/* Declarations from colours.c */
+int	get_colour(float z, int z_min, int z_max);
+
+/* Declarations from controls.c */
+void	exit_program(t_ctrl *session);
+int	close_window(t_ctrl *ctrl);
+int	key_hook(int keycode, t_ctrl *ctrl);
+
+/* Declarations from draw.c */
+void	draw_line(t_image image, t_crd src, t_crd dest, t_primitive z);
+void	clear_image(t_ctrl *session, int width, int height);
 
 /* Declarations from init.c */
 t_crd	handle_out_of_bounds_line(t_crd point);
@@ -172,12 +177,24 @@ t_map	*init_map(void);
 void	init_offset(t_ctrl *session, int x, int y, double z_scalar);
 t_ctrl	init_session(t_map *map);
 
-/* Declarations from render.c */
-void	center_image(t_ctrl *se);
-int	render_loop(t_ctrl *session);
+/* Declarations from maffs.c */
+int	ternary(int a, int b, int c);
+int	is_pixel_out_of_bounds(t_crd p);
+void	get_coordinate_limits(t_map *map);
+float	get_z_scale_factor(t_map *map);
 
-/* Declarations from colours.c */
-int	get_colour(float z, int z_min, int z_max);
+/* Declarations from main.c */
+void	apply_offset(t_ctrl *sesh);
+int	main(int argc, char *argv[]);
+
+/* Declarations from map_mgmt.c */
+t_crd	populate_coordinate(int x, int y, char *z);
+t_crd *parse_row_to_coordinates(char *row, int y, int *count);
+int	append_row_to_map(t_map *map, t_crd *row_coords, int row_length);
+
+/* Declarations from parsing.c */
+char **read_and_split_map(char *filename);
+t_map *parse_map(char *filename);
 
 /* Declarations from printing.c */
 void	print_char_array(char **arr);
@@ -185,30 +202,13 @@ void	print_point(t_crd c);
 void	print_map_struct(t_map *map);
 void	print_coordinates(t_crd *crd, int count);
 
-/* Declarations from main.c */
-void	apply_offset(t_ctrl *sesh);
-int	main(int argc, char *argv[]);
+/* Declarations from render.c */
+void	center_image(t_ctrl *se);
+int	render_loop(t_ctrl *session);
 
-/* Declarations from draw.c */
-void	draw_line(t_image image, t_crd src, t_crd dest, t_primitive z);
-void	clear_image(t_ctrl *session, int width, int height);
-
-/* Declarations from maffs.c */
-int	ternary(int a, int b, int c);
-int	is_pixel_out_of_bounds(t_crd p);
-void	get_coordinate_limits(t_map *map);
-float	get_z_scale_factor(t_map *map);
-
-/* Declarations from map_mgmt.c */
-t_crd populate_coordinate(int x, int y, char *z);
-t_crd *parse_row_to_coordinates(char *row, int y, int *count);
-int append_row_to_map(t_map *map, t_crd *row_coords, int row_length);
-
-/* Declarations from affine.c */
-void	translate(t_ctrl *session, int dx, int dy);
-void	scale(t_ctrl *session, int factor);
-void	flatten_isometrically(t_crd *point);
-void	flatten_cabinet(t_crd *point);
+/* Declarations from utils.c */
+int	check_extension(char *filename, char *ext);
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
 /* declarations end */
 
