@@ -5,81 +5,141 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/22 13:33:57 by weast             #+#    #+#             */
-/*   Updated: 2025/01/27 16:28:29 by weast            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 17:13:46 by weast             #+#    #+#             */
-/*   Updated: 2025/01/22 13:33:54 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/27 17:34:38 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void	handle_new_client(pid_t sender_pid, t_client *state)
+
+void initialize_client(t_client *client)
 {
-	state->client_pid = sender_pid;
-	state->current_char = 0;
-	state->bit_index = 0;
-	if (DEBUG)
-		ft_printf("new client connected: PID: %i\n", state->client_pid);
+    client->client_pid = 0;
+    client->current_char = 0;
+    client->bit_index = 0;
+    client->message_length = 0;
+    client->metadata_received = 0;
+    client->length_index = 0;
+    client->message_buffer = NULL;
+
+    // Initialize the length_buffer with 0s
+    for (int i = 0; i < LENGTH_BUFFER_SIZE; i++)
+        client->length_buffer[i] = 0;
 }
 
-// if sig1 is caught, set LSB to 1
-// current char = 0000 0000, then it becomes 1000 0000?
-void	process_bit(int signal, t_client *state)
+int process_metadata(int signal, t_client *state)
 {
-	if (signal == SIGUSR1)
-        state->current_char |= 1;
-	state->bit_index++;
-	if (state->bit_index == 8)
-	{
-		if (state->current_char == '\0')
-		{
-			ft_printf("\n");
-			return ;
-		}
-		else
-			ft_printf("%c", state->current_char);
-	state->current_char = 0;
-	state->bit_index = 0;
-	}
-	else
-		state->current_char <<= 1;
+    if (signal == SIGUSR1)
+        state->current_char |= 1;  // Set LSB to 1
+    state->bit_index++;
+
+    if (state->bit_index == 8)  // After receiving 1 byte (8 bits)
+    {
+        if (state->current_char == '\0')  // Null terminator indicates end of length string
+        {
+            // Convert the length string to an integer (with boundary check)
+            state->message_length = ft_atoi(state->length_buffer);
+            if (state->message_length > MAX_MESSAGE_LENGTH)
+            {
+                // Handle the case where the message length exceeds the limit
+                ft_printf("Message length exceeds maximum allowed value.\n");
+                return -1;  // Error case
+            }
+
+            // Allocate buffer for the message content
+            state->message_buffer = (char *)malloc(state->message_length + 1);
+            if (state->message_buffer == NULL)
+                return -1;  // Error handling if allocation fails
+
+            state->length_index = 0;
+			state->message_buffer[state->message_length + 1] = '\0';
+            state->metadata_received = 1;
+        }
+        else
+        {
+            // Store the byte in the length_buffer for conversion
+            state->length_buffer[state->length_index] = state->current_char;
+            state->length_index++;
+        }
+
+        // Reset for next byte
+        state->current_char = 0;
+        state->bit_index = 0;
+    }
+    else
+    {
+        state->current_char <<= 1;  // Shift left to prepare for next bit
+    }
+
+    return 0;
 }
 
+void process_bit(int signal, t_client *state)
+{
+    if (!state->metadata_received)
+    {
+        if (process_metadata(signal, state) == -1)
+            return;  // Exit if there's an error processing metadata
+    }
+    else
+    {
+        if (signal == SIGUSR1)
+            state->current_char |= 1;  // Set LSB to 1
+        state->bit_index++;
+        if (state->bit_index == 8)  // After receiving 1 byte
+        {
+            if (state->current_char == '\0')  // Null terminator indicates end of message
+            {
+                ft_printf("Received Message: %s\n", state->message_buffer);
+                free(state->message_buffer);  // Free the message buffer after use
+                state->message_buffer = NULL;
+                state->metadata_received = 0;  // Reset for next client
+            }
+            else
+                state->message_buffer[state->length_index++] = state->current_char;
+            state->current_char = 0;
+            state->bit_index = 0;
+        }
+        else
+            state->current_char <<= 1;  // Shift left for next bit
+    }
+}
 // Signal handler function
 void handle_signal(int signal, siginfo_t *info, void *context)
 {
-    static t_client client = {0, 0, 0};
-	pid_t sender_pid;
+    static t_client client = {0};  // Initialize client structure
+    pid_t sender_pid;
 
-    (void)context;
+    (void)context;  // Unused parameter
     sender_pid = info->si_pid;
+
     if (client.client_pid != sender_pid)
-        handle_new_client(sender_pid, &client);
+    {
+		initialize_client(&client);
+		client.client_pid = sender_pid;
+        if (DEBUG)
+            ft_printf("New client connected: PID: %d\n", sender_pid);
+    }
+
+    // Process the bit (handles both metadata and actual message)
     process_bit(signal, &client);
 }
+
 
 int main(void)
 {
     struct sigaction sa;
 
-	ft_printf("%d\n", getpid());
+    ft_printf("%d\n", getpid());  // Print the server PID for the client to connect
+	sa.sa_flags = SA_SIGINFO;
     sa.sa_sigaction = handle_signal;
     sigemptyset(&sa.sa_mask);
     sigaction(SIGUSR1, &sa, NULL);
     sigaction(SIGUSR2, &sa, NULL);
 
     while (1)
-        pause();
+        pause();  // Wait for signals
 
     return 0;
 }

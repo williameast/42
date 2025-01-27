@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 17:14:00 by weast             #+#    #+#             */
-/*   Updated: 2025/01/27 16:36:54 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/27 17:32:48 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void transmit_bit(int pid, int bit)
         kill(pid, SIGUSR2);
     else if (bit == 1)
 		kill(pid, SIGUSR1);
-	usleep(500);
+	usleep(100);
 }
 
 void transmit_char(int pid, char c)
@@ -50,6 +50,15 @@ void transmit_message(int pid, char *message)
     transmit_char(pid, '\0');
 }
 
+void	transmit_length(int pid, char *message)
+{
+	char	*len;
+
+	len = ft_itoa(ft_strlen(message));
+	transmit_message(pid, len);
+}
+
+
 int main(int argc, char **argv)
 {
 	pid_t server_pid;
@@ -69,7 +78,9 @@ int main(int argc, char **argv)
 		ft_printf("Client PID: %d\n", getpid());
 		ft_printf("Sending message to server PID: %d\n", server_pid);
 	}
+    transmit_length(server_pid, message);
     transmit_message(server_pid, message);
+
 	ft_printf("finished transmitting message");
 
     return (0);
