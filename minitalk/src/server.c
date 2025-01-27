@@ -6,7 +6,7 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 17:13:46 by weast             #+#    #+#             */
-/*   Updated: 2025/01/27 17:34:38 by weast            ###   ########.fr       */
+/*   Updated: 2025/01/27 17:38:19 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,15 @@ int process_metadata(int signal, t_client *state)
     return 0;
 }
 
+void	print_output(t_client *state)
+{
+	ft_printf("%s\n", state->message_buffer);
+	free(state->message_buffer);  // Free the message buffer after use
+	state->message_buffer = NULL;
+	state->metadata_received = 0;  // Reset for next client
+}
+
+
 void process_bit(int signal, t_client *state)
 {
     if (!state->metadata_received)
@@ -90,12 +99,7 @@ void process_bit(int signal, t_client *state)
         if (state->bit_index == 8)  // After receiving 1 byte
         {
             if (state->current_char == '\0')  // Null terminator indicates end of message
-            {
-                ft_printf("Received Message: %s\n", state->message_buffer);
-                free(state->message_buffer);  // Free the message buffer after use
-                state->message_buffer = NULL;
-                state->metadata_received = 0;  // Reset for next client
-            }
+				print_output(state);
             else
                 state->message_buffer[state->length_index++] = state->current_char;
             state->current_char = 0;
