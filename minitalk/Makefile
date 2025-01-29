@@ -6,7 +6,7 @@
 #    By: weast <weast@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/20 14:00:21 by weast             #+#    #+#              #
-#    Updated: 2025/01/29 15:29:28 by weast            ###   ########.fr        #
+#    Updated: 2025/01/29 15:51:23 by weast            ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -87,10 +87,6 @@ fclean: clean
 	@rm -rf $(BIN_DIR)
 	@make fclean -C $(LIBFT_DIR)
 	@make fclean -C $(PRINTF_DIR)
-
-run:
-	@alacritty --hold -e bash -c "$(BIN_DIR)/server; exec bash" & \
-	alacritty --hold -e bash -c "$(BIN_DIR)/client; exec bash"
 
 re: fclean all
 
