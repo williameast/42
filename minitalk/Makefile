@@ -6,7 +6,7 @@
 #    By: weast <weast@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/20 14:00:21 by weast             #+#    #+#              #
-#    Updated: 2025/01/22 13:00:59 by weast            ###   ########.fr        #
+#    Updated: 2025/01/29 15:29:28 by weast            ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -32,8 +32,8 @@ CLIENT      = $(BIN_DIR)/client
 SERVER      = $(BIN_DIR)/server
 
 ### SOURCE FILES ###
-CLIENT_SRC  = client.c common.c
-SERVER_SRC  = server.c common.c
+CLIENT_SRC  = client.c client_utils.c
+SERVER_SRC  = server.c server_utils.c
 
 ### OBJECT FILES ###
 CLIENT_OBJS = $(addprefix $(OBJ_DIR)/, $(CLIENT_SRC:.c=.o))

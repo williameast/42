@@ -6,28 +6,13 @@
 /*   By: weast <weast@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 17:13:46 by weast             #+#    #+#             */
-/*   Updated: 2025/01/29 11:38:00 by William          ###   ########.fr       */
+/*   Updated: 2025/01/29 14:57:41 by weast            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
 
-void initialize_client(t_client *client)
-{
-    int	i;
-
-    i = 0;
-    client->client_pid = 0;
-    client->current_char = 0;
-    client->bit_index = 0;
-    client->message_length = 0;
-    client->metadata_received = 0;
-    client->length_index = 0;
-    client->message_buffer = NULL;
-    while (i < LENGTH_BUFFER_SIZE)
-        client->length_buffer[i++] = 0;
-}
 
 int process_metadata(int signal, t_client *client)
 {
@@ -38,21 +23,11 @@ int process_metadata(int signal, t_client *client)
     {
         if (client->current_char == '\0')
         {
-            client->message_length = ft_atoi(client->length_buffer);
-            if (client->message_length > MAX_MESSAGE_LENGTH)
+            if (create_message_buffer(client) != 0)
             {
-                ft_printf("Message length exceeds maximum allowed value.\n");
-                if (client->message_buffer)
-                        free(client->message_buffer);
-                client->message_buffer = NULL;
-                return -1;
+                kill(client->client_pid, SIGUSR2);
+                return (-1);
             }
-            client->message_buffer = (char *)malloc(client->message_length + 1);
-            if (client->message_buffer == NULL)
-                return -1;
-            client->length_index = 0;
-			client->message_buffer[client->message_length] = '\0';
-            client->metadata_received = 1;
         }
         else
         {
@@ -63,16 +38,8 @@ int process_metadata(int signal, t_client *client)
         client->bit_index = 0;
     }
     else
-        client->current_char <<= 1;  // Shift left to prepare for next bit
+        client->current_char <<= 1;
     return 0;
-}
-
-void	print_output(t_client *client)
-{
-	ft_printf("%s\n", client->message_buffer);
-	free(client->message_buffer);  // Free the message buffer after use
-	client->message_buffer = NULL;
-	client->metadata_received = 0;  // Reset for next client
 }
 
 void process_bit(int signal, t_client *client)
@@ -80,14 +47,13 @@ void process_bit(int signal, t_client *client)
     if (!client->metadata_received)
     {
         if (process_metadata(signal, client) == -1)
-            return;
+            return ;
     }
     else
     {
         if (signal == SIGUSR1)
             client->current_char |= 1;
         client->bit_index++;
-
         if (client->bit_index == 8)
         {
             if (client->current_char == '\0')
